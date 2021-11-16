@@ -4,7 +4,6 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
@@ -17,104 +16,138 @@ import se.project.model.bike.TwinBike;
 
 public class BikeDao implements IBike {
 
-	@Override
-	public ObservableList<BikeType> getListFromDB(String store) {
-		ObservableList<BikeType> bikeList = FXCollections.observableArrayList();
+  @Override
+  public ObservableList<BikeType> getListFromDB(String store) {
+    ObservableList<BikeType> bikeList = FXCollections.observableArrayList();
 
-		try {
-		
-			Connection con = Context.getConnection();
-			PreparedStatement ps = con.prepareStatement(
-					"SELECT biketype.id,biketype.name,type,manuafactur,producer,cost FROM biketype INNER JOIN store ON biketype.storeid = store.storeid where store.name = ?");
-			ps.setString(1, store);
-           
-			ResultSet rs = ps.executeQuery();
+    try {
+      Connection con = Context.getConnection();
+      PreparedStatement ps = con.prepareStatement(
+          "SELECT biketype.id,biketype.name,type,manuafactur,producer,cost FROM biketype INNER JOIN store ON biketype.storeid = store.storeid where store.name = ?");
+      ps.setString(1, store);
 
-			while (rs.next()) {
-				BikeType bike = getObject(rs.getString(3));
-				bike.setId(Integer.valueOf(rs.getString(1)));
-				bike.setName(rs.getString(2));
-				bike.setType(rs.getString(3));
-				bike.setManufacture(rs.getString(4));
-				bike.setProducer(rs.getString(5));
-				bike.setCost(Integer.parseInt(rs.getString(6)));
-				bikeList.add(bike);
-			}
-			con.close();
-		} catch (Exception e) {
-			System.out.println(e);
-		}
+      ResultSet rs = ps.executeQuery();
 
-		return bikeList;
-	}
+      while (rs.next()) {
+        BikeType bike = getObject(rs.getString(3));
+        bike.setId(Integer.valueOf(rs.getString(1)));
+        bike.setName(rs.getString(2));
+        bike.setType(rs.getString(3));
+        bike.setManufacture(rs.getString(4));
+        bike.setProducer(rs.getString(5));
+        bike.setCost(Integer.parseInt(rs.getString(6)));
+        bikeList.add(bike);
+      }
+      con.close();
+    } catch (Exception e) {
+      System.out.println(e);
+    }
 
-	@Override
-	public BikeType getBikeFromDB(String bikeName,String type) {
-		BikeType bike = getObject(type);
-		try {
-			
-			Connection con = Context.getConnection();
-			PreparedStatement ps = con.prepareStatement("SELECT * FROM biketype  where biketype.name = ?");
-			ps.setString(1, bikeName);
-			ResultSet rs = ps.executeQuery();
-			rs.next();
-			bike.setId(Integer.valueOf(rs.getString(1)));
-			bike.setName(rs.getString(3));
-			bike.setType(rs.getString(4));
-			bike.setWeight(Integer.parseInt(rs.getString(5)));
-			bike.setLicense(rs.getString(6));
-			bike.setManufacture(rs.getString(7));
-			bike.setProducer(rs.getString(8));
-			bike.setCost(Integer.valueOf(rs.getString(9)));
-			con.close();
-		} catch (Exception e) {
-			System.out.println(e);
+    return bikeList;
+  }
 
-		}
-		return bike;
-	}
-	
-	public BikeType getBikeById(String id) {
-		BikeType  bike ;
-		try {
-			
-			Connection con = Context.getConnection();
-			PreparedStatement ps = con.prepareStatement("SELECT  * FROM biketype  where id = ?"); // nen select col thay vi select het
-			ps.setString(1,id);
-			ResultSet rs = ps.executeQuery();
-		    
-			rs.next();
-		     
-		    bike = getObject(rs.getString(4));  // type
-			bike.setName(rs.getString(3));
-			bike.setType(rs.getString(4));
-			bike.setWeight(Integer.parseInt(rs.getString(5)));
-			bike.setLicense(rs.getString(6));
-			bike.setManufacture(rs.getString(7));
-			bike.setProducer(rs.getString(8));
-		    
-			con.close();
-			return bike;
-		} catch (Exception e) {
-			System.out.println(e);
+  @Override
+  public BikeType getBikeFromDB(String bikeName) {
 
-		}
-	     return null;
-	}
-	
-	public  BikeType getObject(String type) {
-		switch (type) {
-		case "Ebike":
-			return new EBike();
+    try {
 
-		case "Bike":
-			return new Bike();
+      Connection con = Context.getConnection();
+      PreparedStatement ps = con.prepareStatement("SELECT * FROM biketype where biketype.name = ?");
+      ps.setString(1, bikeName);
+      ResultSet rs = ps.executeQuery();
+      rs.next();
+      BikeType bike = getObject(rs.getString(4));
+      bike.setId(Integer.valueOf(rs.getString(1)));
+      bike.setName(rs.getString(3));
+      bike.setType(rs.getString(4));
+      bike.setWeight(Integer.parseInt(rs.getString(5)));
+      bike.setLicense(rs.getString(6));
+      bike.setManufacture(rs.getString(7));
+      bike.setProducer(rs.getString(8));
+      bike.setCost(Integer.valueOf(rs.getString(9)));
+      File file = new File("src/se/project/image/"
+    	        + bike.getName() + ".jpeg");
+    	    Image image = new Image(file.toURI().toString());
+      bike.setI(image);
+      con.close();
+      return bike;
+    } catch (Exception e) {
+      System.out.println(e);
 
-		case "TwinBike":
-			return new TwinBike();
+    }
+    return null;
+  }
 
-		}
-		return null;
-	}
-  
+  public BikeType getBikeById(String id) {
+    BikeType bike;
+    try {
+
+      Connection con = Context.getConnection();
+      PreparedStatement ps = con.prepareStatement(
+          "SELECT  * FROM biketype  where id = ?"); // nen select col thay vi select het
+      ps.setString(1, id);
+      ResultSet rs = ps.executeQuery();
+      rs.next();
+      bike = getObject(rs.getString(4));  // type
+      bike.setName(rs.getString(3));
+      bike.setType(rs.getString(4));
+      bike.setWeight(Integer.parseInt(rs.getString(5)));
+      bike.setLicense(rs.getString(6));
+      bike.setManufacture(rs.getString(7));
+      bike.setProducer(rs.getString(8));
+      bike.setCost(Integer.valueOf(rs.getString(9)));
+      con.close();
+      return bike;
+    } catch (Exception e) {
+      System.out.println(e);
+
+    }
+    return null;
+  }
+
+  public BikeType getObject(String type) {
+    switch (type) {
+      case "Ebike":
+        return new EBike();
+
+      case "Bike":
+        return new Bike();
+
+      case "TwinBike":
+        return new TwinBike();
+
+    }
+    return null;
+  }
+
+  @Override
+  public ObservableList<BikeType> getAllBike() {
+    ObservableList<BikeType> bikeList = FXCollections.observableArrayList();
+
+    try {
+      Connection con = Context.getConnection();
+      PreparedStatement ps = con.prepareStatement(
+          "SELECT  * FROM biketype"); // nen select col thay vi select het
+
+      ResultSet rs = ps.executeQuery();
+
+      while (rs.next()) {
+        BikeType bike = getObject(rs.getString(4));  // type
+        bike.setName(rs.getString(3));
+        bike.setType(rs.getString(4));
+        bike.setWeight(Integer.parseInt(rs.getString(5)));
+        bike.setLicense(rs.getString(6));
+        bike.setManufacture(rs.getString(7));
+        bike.setProducer(rs.getString(8));
+        bike.setCost(Integer.valueOf(rs.getString(9)));
+        bikeList.add(bike);
+      }
+      con.close();
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+
+    return bikeList;
+  }
+
 }

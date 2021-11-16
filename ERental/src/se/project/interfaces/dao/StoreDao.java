@@ -1,95 +1,98 @@
 package se.project.interfaces.dao;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.image.Image;
 import se.project.database.Context;
 import se.project.interfaces.IStore;
 import se.project.model.store.Store;
-import se.project.model.store.StoreStatus;
 
 public class StoreDao implements IStore {
 
-	@Override
-	public ObservableList<Store> getListFromDB() {
-		// TODO Auto-generated method stub
+  @Override
+  public ObservableList<Store> getListFromDB() {
+    // TODO Auto-generated method stub
 
-		ObservableList<Store> storeList = FXCollections.observableArrayList();
+    ObservableList<Store> storeList = FXCollections.observableArrayList();
 
-		try {
+    try {
 
-			Connection con = Context.getConnection();
-			// can liet ke so xe dang thue 
-			PreparedStatement ps = con.prepareStatement("SELECT s.name,s.address,s.emptyDock,d.rent,s.status,s.storeid FROM store s,"+
-					"(SELECT b.storeid as id,count(*) as rent from biketype b where status = 'Rent' group by storeid) d "+
-                    "WHERE s.storeid = d.id");
+      Connection con = Context.getConnection();
+      // can liet ke so xe dang thue
+      PreparedStatement ps = con.prepareStatement(
+          "SELECT s.name,s.address,s.emptyDock,coalesce(d.rent,0),s.status,s.storeid "
+              + "FROM store s LEFT JOIN (SELECT storeid,count(*) as rent  FROM biketype "
+              + "WHERE status = 'Rent' GROUP BY storeid ) as d ON s.storeid = d.storeid");
 
-			ResultSet rs = ps.executeQuery();
+      ResultSet rs = ps.executeQuery();
+      while (rs.next()) {
+        Store store = new Store();
+        //System.out.print(rs.getString(1));
+        store.setName(rs.getString(1));
+        store.setAddress(rs.getString(2));
+        store.setAvailable(Integer.valueOf(rs.getString(3)));
+        store.setRent(Integer.valueOf(rs.getString(4)));
+        store.setStatus(rs.getString(5));
+        store.setId(Integer.valueOf(rs.getString(6)));
+        File file = new File("src/se/project/image/"
+    	        + store.getId() + ".jpeg");
+    	    Image image = new Image(file.toURI().toString());
+        store.setImage(image);
+        storeList.add(store);
+      }
 
-			while (rs.next()) {
-				Store store = new Store();
-				//System.out.print(rs.getString(1));
-				store.setName(rs.getString(1));
-				store.setAddress(rs.getString(2));
-				store.setAvailable(Integer.parseInt(rs.getString(3)));
-				store.setRent(Integer.valueOf(rs.getString(4)));
-				store.setStatus(StoreStatus.valueOf(rs.getString(5)));
-				store.setId(Integer.valueOf(rs.getString(6)));
-				storeList.add(store);
-			}
-           
-			con.close();
-		} catch (Exception e) {
-			System.out.println(e);
-		}
+      con.close();
+    } catch (Exception e) {
+      System.out.println(e);
+    }
 
-		return storeList;
-	}
-	@Override
-	public ObservableList<String> getStoreAvai() {
-		// TODO Auto-generated method stub
+    return storeList;
+  }
 
-		ObservableList<String> storeList = FXCollections.observableArrayList();
+  @Override
+  public ObservableList<String> getStoreAvai() {
+    // TODO Auto-generated method stub
 
-		try {
+    ObservableList<String> storeList = FXCollections.observableArrayList();
 
-			Connection con = Context.getConnection();
-			// can liet ke so xe dang thue 
-			PreparedStatement ps = con.prepareStatement("SELECT name FROM store where status = 'Available'");
+    try {
 
-			ResultSet rs = ps.executeQuery();
+      Connection con = Context.getConnection();
+      // can liet ke so xe dang thue
+      PreparedStatement ps = con.prepareStatement(
+          "SELECT name FROM store where status = 'Available'");
 
-			while (rs.next()) {
-				
-			
-				storeList.add(rs.getString(1));
-			}
-           
-			con.close();
-		} catch (Exception e) {
-			System.out.println(e);
-		}
+      ResultSet rs = ps.executeQuery();
 
-		return storeList;
-	}
-	
-	public void updateStoreReturn( int bikeId,int storeId) {
-		try {
-			Connection con = Context.getConnection();
-			//GET ID
-			PreparedStatement ps = con.prepareStatement("SELECT updateReturn(?,?)" );
-			ps.setString(1,Integer.toString(bikeId));
-			ps.setString(2,Integer.toString(storeId));
-		    ps.execute();
-		    con.close();
-		} catch (Exception e) {
-			System.out.println(e);
-		
-	}
-	}
+      while (rs.next()) {
+
+        storeList.add(rs.getString(1));
+      }
+
+      con.close();
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+
+    return storeList;
+  }
+
+  public void updateStoreReturn(int bikeId, int storeId) {
+    try {
+      Connection con = Context.getConnection();
+      //GET ID
+      PreparedStatement ps = con.prepareStatement("SELECT updateReturn(?,?)");
+      ps.setString(1, Integer.toString(bikeId));
+      ps.setString(2, Integer.toString(storeId));
+      ps.execute();
+      con.close();
+    } catch (Exception e) {
+      System.out.println(e);
+
+    }
+  }
 }

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="576.0" prefWidth="840.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se.project.controller.category.CategoryController">
+   <children>
+      <Pane fx:id="pane11" prefHeight="55.0" prefWidth="840.0" style="-fx-background-color: #4169E1;">
+         <children>
+            <ImageView disable="true" fitHeight="28.0" fitWidth="32.0" layoutX="744.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../../Documents/GitHub/OnlineShopping/src/Store/productPics/icons/Shop-Store-Icon-5.png" />
+               </image>
+            </ImageView>
+            <TextField layoutX="83.0" layoutY="14.0" prefHeight="28.0" prefWidth="598.0" promptText="What are you looking for ? " />
+            <ImageView fitHeight="32.0" fitWidth="31.0" layoutX="41.0" layoutY="11.0">
+               <image>
+                  <Image url="@../image/search.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Pane>
+      <ScrollPane layoutY="55.0" prefHeight="521.0" prefWidth="198.0">
+         <content>
+            <FlowPane fx:id="storeFlow" prefHeight="521.0" prefWidth="198.0" style="-fx-vgap: 5;" />
+         </content>
+      </ScrollPane>
+      <ScrollPane layoutX="250.0" layoutY="100.0" prefHeight="470.0" prefWidth="526.0">
+         <content>
+            <FlowPane fx:id="itemFlow" prefHeight="470.0" prefWidth="526.0" />
+         </content>
+      </ScrollPane>
+      <Pane layoutX="250.0" layoutY="62.0" prefHeight="32.0" prefWidth="504.0">
+         <children>
+            <Label layoutY="-2.0" prefHeight="32.0" prefWidth="255.0" text="Thang long cycles">
+               <font>
+                  <Font name="Segoe UI Black" size="16.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+   </children>
+</Pane>

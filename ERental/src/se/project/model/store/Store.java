@@ -1,84 +1,77 @@
 package se.project.model.store;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
-
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import se.project.database.Context;
-import se.project.database.MySQLConnection;
-
+import javafx.scene.image.Image;
 
 public class Store {
-	private String name;
-	private String address;
-	private int available;
-	private int rent;
-	private int id;
-	public int getId() {
-		return id;
-	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
+  private String name;
+  private String address;
+  private int available;
+  private int rent;
+  private int id;
+  private String status;
+  private Image store;
+  public void setImage(Image store) {
+	this.store = store;
+}
+
+public Image getImage() {
+	return store;
+}
 
 
+public String getStatus() {
+    return status;
+  }
 
+  public void setStatus(String status) {
+    this.status = status;
+  }
 
-	private StoreStatus status;
-    
-	public void setStatus(StoreStatus status) {
-		this.status = status;
-	}
+  public int getId() {
+    return id;
+  }
 
-	public String getName() {
-		return name;
-	}
+  public void setId(int id) {
+    this.id = id;
+  }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public void setId(Integer valueOf) {
+    // TODO Auto-generated method stub
+    this.id = valueOf;
+  }
 
-	public String getAddress() {
-		return address;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	public int getAvailable() {
-		return available;
-	}
+  public String getAddress() {
+    return address;
+  }
 
-	public void setAvailable(int available) {
-		this.available = available;
-	}
+  public void setAddress(String address) {
+    this.address = address;
+  }
 
-	public int getRent() {
-		return rent;
-	}
+  public int getAvailable() {
+    return available;
+  }
 
-	public void setRent(int rent) {
-		this.rent = rent;
-	}
+  public void setAvailable(int available) {
+    this.available = available;
+  }
 
-	
-	
-    
-	public StoreStatus getStatus() {
-		return status;
-	}
+  public int getRent() {
+    return rent;
+  }
 
-	public void setId(Integer valueOf) {
-		// TODO Auto-generated method stub
-		this.id = valueOf;
-	}
+  public void setRent(int rent) {
+    this.rent = rent;
+  }
     
 	/*
 	public String getStatusFormat() {

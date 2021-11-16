@@ -1,125 +1,117 @@
 package se.project.model.bike;
 
-import java.io.File;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import se.project.database.Context;
-import se.project.database.MySQLConnection;
-
 
 public abstract class BikeType {
-	protected String name;
-	protected String type;
-	protected String manufacture;
-	protected String producer;
-	protected int cost;
-	protected int weight;
-	protected String license;
-	protected String status;
-	protected int deposit;
-	protected int id;
-	
 
-	public int getId() {
-		return id;
-	}
+  protected String name;
+  protected String type;
+  protected String manufacture;
+  protected String producer;
+  protected int cost;
+  protected int weight;
+  protected String license;
+  protected String status;
+  protected int deposit;
+  protected int id;
+  protected Image i;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+  public Image getI() {
+	return i;
+}
 
-	public BikeType() {
-		// TODO Auto-generated constructor stub
-	}
+public void setI(Image i) {
+	this.i = i;
+}
 
-	public BikeType(String name, String type, String manu, String producer, int cost) {
-		this.name = name;
-		this.type = type;
-		this.manufacture = manu;
-		this.producer = producer;
-		this.cost = cost;
-	}
+public BikeType() {
+    // TODO Auto-generated constructor stub
+  }
 
-	
-	
-	
-	public String getStatus() {
-		return status;
-	}
+  public BikeType(String name, String type, String manu, String producer, int cost) {
+    this.name = name;
+    this.type = type;
+    this.manufacture = manu;
+    this.producer = producer;
+    this.cost = cost;
+  }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+  public int getId() {
+    return id;
+  }
 
-	public String getLicense() {
-		return license;
-	}
+  public void setId(int id) {
+    this.id = id;
+  }
 
-	public void setLicense(String license) {
-		this.license = license;
-	}
+  public String getStatus() {
+    return status;
+  }
 
-	public int getWeight() {
-		return weight;
-	}
+  public void setStatus(String status) {
+    this.status = status;
+  }
 
-	public void setWeight(int weight) {
-		this.weight = weight;
-	}
+  public String getLicense() {
+    return license;
+  }
 
-	public String getManufacture() {
-		return manufacture;
-	}
+  public void setLicense(String license) {
+    this.license = license;
+  }
 
-	public void setManufacture(String manufacture) {
-		this.manufacture = manufacture;
-	}
+  public int getWeight() {
+    return weight;
+  }
 
-	public String getName() {
-		return name;
-	}
+  public void setWeight(int weight) {
+    this.weight = weight;
+  }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public String getManufacture() {
+    return manufacture;
+  }
 
-	public String getType() {
-		return type;
-	}
+  public void setManufacture(String manufacture) {
+    this.manufacture = manufacture;
+  }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public String getProducer() {
-		return producer;
-	}
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	public void setProducer(String producer) {
-		this.producer = producer;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public int getCost() {
-		return cost;
-	}
+  public void setType(String type) {
+    this.type = type;
+  }
 
-	public void setCost(int cost) {
-		this.cost = cost;
-	}
-	
+  public String getProducer() {
+    return producer;
+  }
 
-	
-	
-	public  int getDeposit() {
-		return 0;
-	}
-		
-	
+  public void setProducer(String producer) {
+    this.producer = producer;
+  }
+
+  public int getCost() {
+    return cost;
+  }
+
+  public void setCost(int cost) {
+    this.cost = cost;
+  }
+
+
+  public int getDeposit() {
+    return 0;
+  }
+
 
 }
