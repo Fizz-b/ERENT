@@ -1,13 +1,18 @@
 package se.project.util;
 
 import java.text.DecimalFormat;
+import java.time.format.DateTimeFormatter;
+
 
 public class DateUtils {
 
   // second to h:m:s
   public static final DecimalFormat formatter = new DecimalFormat("###,###,### d");
+  
 
   //String format = decimalFormat.format(123456789.123);
+  public static final DateTimeFormatter format = DateTimeFormatter.ofPattern(
+	      "yyyy-MM-dd HH:mm:ss");  // create date util
 
   public static String date(long l) {
 

@@ -91,7 +91,7 @@ public class bankGateController<PayStrategy> implements Initializable {
       card.setCardNum(cardNum.getText());
       LocalDateTime now = LocalDateTime.now();
 
-      formatDateTime = now.format(Order.format);
+      formatDateTime = now.format(DateUtils.format);
 
       //
              /*
@@ -131,11 +131,12 @@ public class bankGateController<PayStrategy> implements Initializable {
           @Override
           public void run() {
             iTransaction.saveTransaction(order.getId(), messageA.getText(),
-                order.getBike().getDeposit());
+            		order.getTotal());
 
             /* TO DO        IMPLEMENT ORDER.GETTOTAL        */
             iTransaction.updateReturn(order.getId(), order.getBike().getId(), order.getTotal(),
                 order.getTimeFinish());  // order.get total thay cho 0
+            System.out.print(order.getId()+order.getBike().getId());
             /* TO DO        IMPLEMENT pick store return o ORDER CONTROLLER       */
             iStore.updateStoreReturn(order.getBike().getId(),
                 1);  // store id from return return ve store nao
@@ -169,7 +170,11 @@ public class bankGateController<PayStrategy> implements Initializable {
       ResultController result = loader.getController();
       result.setOrder(order);
       result.setMsg(messageA.getText());
-      result.setMoney(DateUtils.formatter.format(order.getBike().getDeposit())); /// format
+      if(order.getId()==0) {
+      result.setMoney(DateUtils.formatter.format(order.getBike().getDeposit()));}
+      else{
+    	  result.setMoney(DateUtils.formatter.format(order.getTotal()));/// format
+      }
       result.setTime(formatDateTime);
       Stage stage = (Stage) payBtn.getScene().getWindow();
       stage.setScene(new Scene(root));

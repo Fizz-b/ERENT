@@ -31,7 +31,7 @@ public class BikeCatController {
   public Order getOrder() {
     return order;
   }
-
+   
   public void setOrder(Order o) {
     this.order = o;
   }
@@ -58,11 +58,12 @@ public class BikeCatController {
       BikeType bike = ibike.getBikeFromDB(bikeText.getText());
       ItemController controller = loader.getController();
       // add bike info to pane
+      /*
       if (order.getBike() == null) {
         controller.setBike(null);
       } else {
         controller.setBike(order.getBike());  // order chua co thi bikeRENT = BIKE
-      }
+      }*/
       controller.initItem(bike);
       controller.setOrder(order);
 

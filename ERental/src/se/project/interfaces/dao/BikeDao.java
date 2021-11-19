@@ -15,7 +15,8 @@ import se.project.model.bike.EBike;
 import se.project.model.bike.TwinBike;
 
 public class BikeDao implements IBike {
-
+  
+  /* get all bike by Store name  */
   @Override
   public ObservableList<BikeType> getListFromDB(String store) {
     ObservableList<BikeType> bikeList = FXCollections.observableArrayList();
@@ -45,7 +46,8 @@ public class BikeDao implements IBike {
 
     return bikeList;
   }
-
+  
+  /* get  bike by  name  */
   @Override
   public BikeType getBikeFromDB(String bikeName) {
 
@@ -78,6 +80,7 @@ public class BikeDao implements IBike {
     return null;
   }
 
+  /* get bike by Id */
   public BikeType getBikeById(String id) {
     BikeType bike;
     try {

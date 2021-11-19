@@ -2,14 +2,24 @@ package se.project.controller.home;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.ResourceBundle;
+
+import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.util.Duration;
+
 import javax.swing.JOptionPane;
 
 import se.project.controller.Util;
@@ -20,7 +30,7 @@ import se.project.model.order.Order;
 import se.project.util.DateUtils;
 
 public class ShopController {
-
+       
 	@FXML
 	BorderPane mainPane;
 	Util util = new Util();
@@ -52,6 +62,8 @@ public class ShopController {
 
 	@FXML
 	public void handle(ActionEvent actionEvent) {
+		
+
 		if (actionEvent.getSource() == btnReturn) {
 			if (order.getBike() == null) {
 				JOptionPane.showMessageDialog(null, "RENT FIRST");
@@ -61,17 +73,12 @@ public class ShopController {
 				try {
 					view = loader.load();
 					OrderController or = loader.getController();
-					LocalDateTime s = LocalDateTime.now();
-					s.format(Order.format);
-					// LocalDateTime dateTime = LocalDateTime.parse(timeCreate, format);
-					or.setTotalTime(order.getTotalTime(s));
-					// can update tinh total lien tuc //or.setTotal
+					
+					
+					
+			   
 					or.setOrder(order);
-					or.setTime(order.getTimeCreate());
-					or.setDeposit(DateUtils.formatter.format(order.getBike().getDeposit()));
-					// setTotal(order.getTotal()) can ham tinh tong tien
-					or.setBikeName(order.getBike().getName());
-					or.setImage(order.getBike().getI()); // getImage
+				    or.initPane(order);
 					mainPane.setCenter(view);
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -110,7 +117,7 @@ public class ShopController {
 			}
 		}
 	}
-    
+
 	public void loadHome(Order order) {
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(getClass().getResource("/se/project/gui/home/home.fxml"));
@@ -124,5 +131,7 @@ public class ShopController {
 			e.printStackTrace();
 		}
 	}
+
+
 
 }

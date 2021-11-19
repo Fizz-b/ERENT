@@ -2,6 +2,8 @@ package se.project.controller.pay;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -36,7 +38,10 @@ public class PayController {
 
   @FXML
   private Label remove;
-
+  
+  @FXML
+  private Label excessCash;
+  
   @FXML
   private Button backBtn;
 
@@ -69,7 +74,6 @@ public class PayController {
   @FXML
   private Label total1;
 
-  private Customer customer;
   private BikeType bike;
   private Order order;
   private ShopController shop;
@@ -118,9 +122,7 @@ public class PayController {
     this.shop = shop;
   }
 
-  public void setCustomer(Customer c) {
-    this.customer = c;
-  }
+ 
 
   public BikeType getBikeData() {
     return bike;
@@ -149,7 +151,8 @@ public class PayController {
     try {
       Parent root = loader.load();
       shop = loader.getController();
-      order.setBike(null);
+      if(order.getId()==0) {
+      order.setBike(null);}
       shop.setOrder(order);
       shop.loadHome(order);
       Stage stage = (Stage) (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -195,8 +198,21 @@ public class PayController {
     setBikeData(bike);
     bikeName.setText(bike.getName());
     deposit.setText(DateUtils.formatter.format(order.getBike().getDeposit()));
+    rentFee.setText(DateUtils.formatter.format(order.getTotal()));
+     if(order.getId()!=0) {
+    	 // not work
+    	 excessCash.setText(DateUtils.formatter.format(order.getBike().getDeposit()));
+    	
+			// LocalDateTime dateTime = LocalDateTime.parse(timeCreate, format);
+		 
+    	 time.setText(DateUtils.date(order.getTime()));
+    	 float a = order.getTotal();
+    	 total.setText(DateUtils.formatter.format(a)); 
+    	 total1.setText(DateUtils.formatter.format(a));
+    	 
+     }else {
     total.setText(DateUtils.formatter.format(order.getBike().getDeposit())); // tinh tong
-    total1.setText(DateUtils.formatter.format(order.getBike().getDeposit())); // tinh tong
+    total1.setText(DateUtils.formatter.format(order.getBike().getDeposit()));} // tinh tong
     name.setText(order.getCust().getName());
     cost.setText(Integer.toString(bike.getCost()));
     img.setImage(bike.getI());

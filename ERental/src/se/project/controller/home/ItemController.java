@@ -23,209 +23,131 @@ import se.project.model.order.Order;
 import se.project.model.user.Customer;
 import se.project.util.BikeUtils;
 
-public class ItemController  {
+public class ItemController {
 
-  @FXML
-  private ImageView img;
+	@FXML
+	private ImageView img;
 
-  @FXML
-  private Label license;
+	@FXML
+	private Label license;
 
-  @FXML
-  private Label manufacture;
+	@FXML
+	private Label manufacture;
 
-  @FXML
-  private Button backBtn;
+	@FXML
+	private Button backBtn;
 
-  @FXML
-  private Label name;
+	@FXML
+	private Label name;
 
-  @FXML
-  private AnchorPane paneItem;
+	@FXML
+	private AnchorPane paneItem;
 
-  @FXML
-  private Label producer;
+	@FXML
+	private Label producer;
 
-  @FXML
-  private Button rent;
+	@FXML
+	private Button rent;
 
-  @FXML
-  private Label type;
+	@FXML
+	private Label type;
 
-  @FXML
-  private Label weight;
+	@FXML
+	private Label weight;
 
-  private Order order;
-  private PayController pay;
-  private BikeType bike;
-  private BikeType bikeRent;
-  private ShopController shop;
- 
+	private Order order;
+	private BikeType bike;
+	private PayController pay;
+	private ShopController shop;
 
-  public BikeType getBikeRent() {
-    return bikeRent;
-  }
+	public BikeType getBike() {
+		return bike;
+	}
 
-  
+	public void setOrder(Order order2) {
+		// TODO Auto-generated method stub
+		this.order = order2;
+	}
 
-  public ImageView getImg() {
-    return img;
-  }
+	// set BikeType
+	public void setBike(BikeType bike2) {
+		// TODO Auto-generated method stub
+		this.bike = bike2;
+	}
 
-  public void setImg(ImageView image) {
-    this.img = image;
-  }
+	@FXML
+	public void rentItem(MouseEvent event) {
 
-  public Label getLicense() {
-    return license;
-  }
+		if (order.getBike() == null) {
+			// check bike rent or not befrore add
+			if (BikeUtils.checkBikeRent(bike.getName())) {
+				JOptionPane.showMessageDialog(null, "On rent");
+			} else {
 
-  public void setLicense(Label license) {
-    this.license = license;
-  }
+				FXMLLoader loader = new FXMLLoader();
+				loader.setLocation(getClass().getResource("/se/project/gui/pay/pay.fxml"));
 
-  public Label getManufacture() {
-    return manufacture;
-  }
+				try {
+					// setBike(bike);
+					order.setBike(bike);
+					// setBik(bike)
+					JOptionPane.showMessageDialog(null, "Add to rent");
 
-  public void setManufacture(Label manufacture) {
-    this.manufacture = manufacture;
-  }
+					Parent root = loader.load();
 
-  public Label getName() {
-    return name;
-  }
+					// access the controller and call a method
+					// access the controller and call a method
+					pay = loader.getController();
+					pay.initData(order.getBike(), order);
+					pay.setOrder(order);
 
-  public void setName(Label name) {
-    this.name = name;
-  }
+					// System.out.print(order.getBike().getManufacture());
+					Stage stage = (Stage) (Stage) rent.getScene().getWindow();
+					stage.setScene(new Scene(root));
+					stage.show();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		} else {
+			JOptionPane.showMessageDialog(null, "Finish transact first");
+		}
+	}
 
-  public AnchorPane getPaneItem() {
-    return paneItem;
-  }
+	// lan sau vao lai k con luu bike rent
+	@FXML
+	public void back(MouseEvent event) {
 
-  public void setPaneItem(AnchorPane paneItem) {
-    this.paneItem = paneItem;
-  }
+		// setBike(bikeRent);
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("/se/project/gui/home/shop.fxml"));
+		try {
+			Parent root = loader.load();
+			shop = loader.getController();
+			shop.setOrder(order);
+			shop.loadHome(order);
+    
+			// load
+			Stage stage = (Stage) (Stage) ((Node) event.getSource()).getScene().getWindow();
+			stage.setScene(new Scene(root));
+			stage.show();
 
-  public Label getProducer() {
-    return producer;
-  }
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
-  public void setProducer(Label producer) {
-    this.producer = producer;
-  }
+	public void initItem(BikeType bike) {
+		img.setImage(bike.getI());
+		setBike(bike);
+		name.setText(bike.getName());
+		type.setText(bike.getType());
+		weight.setText(Integer.toString(bike.getWeight()));
+		license.setText(bike.getLicense());
+		manufacture.setText(bike.getManufacture());
+		producer.setText(bike.getProducer());
+	}
 
-  public Label getType() {
-    return type;
-  }
-
-  public void setType(Label type) {
-    this.type = type;
-  }
-
-  public Label getWeight() {
-    return weight;
-  }
-
-  public void setWeight(Label weight) {
-    this.weight = weight;
-  }
-
-  public BikeType getBike() {
-    return bike;
-  }
-
-  public void setBike(BikeType bike) {
-    this.bikeRent = bike;
-
-  }
-
-  //set BikeType
-  public void setBik(BikeType bike2) {
-    // TODO Auto-generated method stub
-    this.bike = bike2;
-  }
-
-  @FXML
-  public void rentItem(MouseEvent event) {
-
-    if (bikeRent == null) {
-      // check bike rent or not befrore add
-      if (BikeUtils.checkBikeRent(bike.getName())) {
-        JOptionPane.showMessageDialog(null, "On rent");
-      } else {
-
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/se/project/gui/pay/pay.fxml"));
-
-        try {
-          setBike(bike);
-          order.setBike(bike);
-          //setBik(bike)
-          JOptionPane.showMessageDialog(null, "Add to rent");
-
-          Parent root = loader.load();
-
-          // access the controller and call a method
-          // access the controller and call a method
-          pay = loader.getController();
-          pay.initData(order.getBike(), order);
-          pay.setOrder(order);
-
-          // System.out.print(order.getBike().getManufacture());
-          Stage stage = (Stage) (Stage) rent.getScene().getWindow();
-          stage.setScene(new Scene(root));
-          stage.show();
-        } catch (IOException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-      }
-    } else {
-      JOptionPane.showMessageDialog(null, "Finish transact first");
-    }
-  }
-
-  // lan sau vao lai k con luu bike rent
-  @FXML
-  public void back(MouseEvent event) {
-
-    //setBike(bikeRent);
-    FXMLLoader loader = new FXMLLoader();
-    loader.setLocation(getClass().getResource("/se/project/gui/home/shop.fxml"));
-    try {
-      Parent root = loader.load();
-      shop = loader.getController();
-
-      shop.setOrder(order);
-      shop.loadHome(order);
-
-      // load
-      Stage stage = (Stage) (Stage) ((Node) event.getSource()).getScene().getWindow();
-      stage.setScene(new Scene(root));
-      stage.show();
-
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-  }
-
-  public void setOrder(Order order2) {
-    // TODO Auto-generated method stub
-    this.order = order2;
-  }
-  
-  public void initItem(BikeType bike) {
-	  img.setImage(bike.getI());
-      setBik(bike);
-      name.setText(bike.getName());
-      type.setText(bike.getType());
-      weight.setText(Integer.toString(bike.getWeight()));
-      license.setText(bike.getLicense());
-      manufacture.setText(bike.getManufacture());
-      producer.setText(bike.getProducer());
-  }
-  
 }

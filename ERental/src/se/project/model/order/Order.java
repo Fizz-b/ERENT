@@ -10,16 +10,23 @@ import se.project.util.DateUtils;
 
 public class Order implements MoneyCharge {
 
-  public static final DateTimeFormatter format = DateTimeFormatter.ofPattern(
-      "yyyy-MM-dd HH:mm:ss");  // create date util
-  private int id = 0;
+ 
+  private int id = 0; // id = 0 chua thue
   private BikeType bike;
   private Customer cust;  // should have cust id
   private int time;  // k can biet
   private String status;
   private String timeCreate;
   private String timeFinish;
+  public Order() {
 
+	 
+  }
+  public Order(Customer cust) {
+
+	  this.cust = cust;
+  }
+  
   public int getId() {
     return id;
   }
@@ -68,33 +75,25 @@ public class Order implements MoneyCharge {
     this.cust = cust;
   }
 
+  // input:current Time
+  // output total: current - timeCreate
   public String getTotalTime(LocalDateTime time) {
-    //LocalDateTime now = LocalDateTime.now(); // current time
-    //now.format(format);
-    //LocalDateTime dateTime = LocalDateTime.parse(timeCreate, format);
+   
 
-    LocalDateTime dateTime = LocalDateTime.parse(timeCreate, format);
+    LocalDateTime dateTime = LocalDateTime.parse(timeCreate, DateUtils.format);
     Duration duration = Duration.between(dateTime, time);
-	    /*
-	    System.out.println(duration.toDays() + " days");
-	    System.out.println(duration.toHours() + " hours");
-	 // minutes between from and to
-        System.out.println(duration.toMinutes() + " minutes");
-        // seconds between from and to
-        System.out.println(duration.toSeconds() + " seconds");
-        */
-
-    return DateUtils.date(duration.toSeconds());
+    setTime(duration.toSeconds());
+    return DateUtils.date(getTime());
 
 
   }
-
+   
   public long getTime() {
     return time;
   }
 
-  public void setTime(int l) {
-    this.time = l;
+  public void setTime(long l) {
+    this.time = (int)l;
   }
 
 
@@ -111,8 +110,6 @@ public class Order implements MoneyCharge {
       total = 10000;
     }
     return total;
-
   }
-
-
+  
 }

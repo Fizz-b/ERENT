@@ -46,11 +46,13 @@ public class ResultController {
 
       // can reset order ve null neu thanh toan xog
       if (order.getTimeFinish() != null) {
+    	  /*
         order.setTimeFinish(null);
         order.setTimeCreate(null);
         order.setStatus(null);
         order.setBike(null);
-        order.setId(0);
+        order.setId(0);*/
+    	  order = new Order(order.getCust());
       }
       shop.setOrder(order);
       shop.loadHome(order);

@@ -14,7 +14,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="576.0" prefWidth="840.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se.project.controller.order.OrderController">
    <children>
-      <AnchorPane layoutX="-3.0" prefHeight="64.0" prefWidth="848.0" style="-fx-background-color: #5aebad;">
+      <AnchorPane layoutX="-3.0" prefHeight="64.0" prefWidth="840.0" style="-fx-background-color: #5aebad;">
          <children>
             <Label layoutX="351.0" layoutY="1.0" prefHeight="62.0" prefWidth="170.0" text="Your Bike" textFill="WHITE">
                <font>

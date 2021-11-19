@@ -29,7 +29,7 @@ import se.project.model.user.Customer;
 
 public class HomeController implements Initializable {
 
-	Context context = new Context();
+	
 	@FXML
 	private TableColumn<Store, String> storeNameCol;
 	@FXML
@@ -103,14 +103,8 @@ public class HomeController implements Initializable {
 
 			Parent root = loader.load();
 			ItemController controller = loader.getController();
-			
-			controller.setBik(bike); // bike thuong
-			if (order.getBike() == null) {
-				bikeRent = null;
-			} else {
-				bikeRent = order.getBike(); // order chua co thi bikeRENT = BIKE (load xe da thue)
-			}
-			controller.setBike(bikeRent); // load bike rent
+
+			controller.setBike(bike);  // bike thuong
 			controller.initItem(bike); // load anh bike
 			controller.setOrder(order);
 

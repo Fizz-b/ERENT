@@ -23,109 +23,117 @@ import se.project.interfaces.dao.StoreDao;
 import se.project.model.bike.BikeType;
 import se.project.model.order.Order;
 import se.project.model.user.Customer;
+import se.project.util.DateUtils;
 
 public class OrderController implements Initializable {
 
-  IStore iStore;
-  @FXML
-  private Button returnBtn;
-  @FXML
-  private ImageView bikeImg;
-  @FXML
-  private Text bikeName;
-  @FXML
-  private Label deposit;
-  @FXML
-  private Label deposit1;
-  @FXML
-  private Label time;
+	IStore iStore;
+	@FXML
+	private Button returnBtn;
+	@FXML
+	private ImageView bikeImg;
+	@FXML
+	private Text bikeName;
+	@FXML
+	private Label deposit;
+	@FXML
+	private Label deposit1;
+	@FXML
+	private Label time;
 
-  @FXML
-  private Label totalTime;
-  @FXML
-  private Label total;
-  private BikeType bike;
-  private Order order;
-  
-  @FXML
-  private ChoiceBox<String> choice = new ChoiceBox<String>();
+	@FXML
+	private Label totalTime;
+	@FXML
+	private Label total;
+	//private BikeType bike;
+	private Order order;
 
-  public void setTime(String t) {
-    time.setText(t);
-  }
+	@FXML
+	private ChoiceBox<String> choice = new ChoiceBox<String>();
 
-  public void setDeposit(String t) {
-    deposit.setText(t);
-  }
+	public Order getOrder() {
+		return order;
+	}
 
-  public void setTotal(String t) {
+	public void setOrder(Order order) {
+		this.order = order;
+	}
+     
+	/*
+	public BikeType getBike() {
+		return bike;
+	}
 
-    total.setText(t);
-  }
+	public void setBike(BikeType bike) {
+		this.bike = bike;
+	}
 
-  public void setBikeName(String name) {
-    bikeName.setText(name);
-  }
+	public void setTime(String t) {
+		time.setText(t);
+	}
 
-  public void setImage(Image m) {
-    bikeImg.setImage(m);
-  }
+	public void setDeposit(String t) {
+		deposit.setText(t);
+	}
 
-  @FXML
-  void returnBike(MouseEvent event) {
-    // change detail
-    FXMLLoader loader = new FXMLLoader();
-    loader.setLocation(getClass().getResource("/se/project/gui/pay/pay.fxml"));
-    try {
-      Parent root = loader.load();
-      PayController pay = loader.getController();
-      pay.initData(order.getBike(), order);
+	public void setTotal(String t) {
 
-      order.setTimeFinish(
-          LocalDateTime.now().format(Order.format));  // set String right format // time finish
-      pay.setOrder(order);
-      Stage stage = (Stage) (Stage) returnBtn.getScene().getWindow();
-      stage.setScene(new Scene(root));
-      stage.show();
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-  }
+		total.setText(t);
+	}
 
-  public Order getOrder() {
-    return order;
-  }
+	public void setBikeName(String name) {
+		bikeName.setText(name);
+	}
 
-  public void setOrder(Order order) {
-    this.order = order;
-  }
+	public void setImage(Image m) {
+		bikeImg.setImage(m);
+	}
+	public void setTotalTime(String totalT) {
+		// TODO Auto-generated method stub
+		totalTime.setText(totalT);
+	}
+     */
+	@FXML
+	void returnBike(MouseEvent event) {
+		// change detail
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("/se/project/gui/pay/pay.fxml"));
+		try {
+			Parent root = loader.load();
+			PayController pay = loader.getController();
 
-  public BikeType getBike() {
-    return bike;
-  }
+			order.setTimeFinish(LocalDateTime.now().format(DateUtils.format));
+			pay.setOrder(order);
+			pay.initData(order.getBike(), order);
 
-  public void setBike(BikeType bike) {
-    this.bike = bike;
-  }
+			Stage stage = (Stage) (Stage) returnBtn.getScene().getWindow();
+			stage.setScene(new Scene(root));
+			stage.show();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		// TODO Auto-generated method stub
+		iStore = new StoreDao();
+		// chi tra ve store co the nhan xe
+		for (String s : iStore.getStoreAvai()) {
+			choice.getItems().add(s);
+		}
 
-
-  @Override
-  public void initialize(URL arg0, ResourceBundle arg1) {
-    // TODO Auto-generated method stub
-    iStore = new StoreDao();
-    // chi tra ve store co the nhan xe
-    for (String s : iStore.getStoreAvai()) {
-      choice.getItems().add(s);
-    }
-
-  }
-
-  public void setTotalTime(String totalT) {
-    // TODO Auto-generated method stub
-    totalTime.setText(totalT);
-  }
-
+	}
+    
+	public void initPane(Order order) {
+		totalTime.setText(order.getTotalTime(LocalDateTime.now()));
+		time.setText(order.getTimeCreate());
+		deposit.setText(DateUtils.formatter.format(order.getBike().getDeposit()));
+		total.setText(DateUtils.formatter.format(order.getTotal())); 
+	    bikeName.setText(order.getBike().getName());
+		bikeImg.setImage(order.getBike().getI()); // getImage
+	}
+	
 
 }

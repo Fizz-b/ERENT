@@ -21,7 +21,8 @@ public class App extends Application {
   }
 
   public void start(Stage stage) throws Exception {
-    Parent root = (Parent) FXMLLoader.load(getClass().getResource("/se/project/gui/login/splash.fxml"));
+   Parent root = (Parent) FXMLLoader.load(getClass().getResource("/se/project/gui/login/splash.fxml"));
+	//  Parent root = (Parent) FXMLLoader.load(getClass().getResource("/se/project/gui/test.fxml"));
     Scene scene = new Scene(root);
     Image icon = new Image("se/project/image/Bicycle-icon.png");
     stage.getIcons().add(icon);

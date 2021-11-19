@@ -12,7 +12,9 @@ import se.project.interfaces.IStore;
 import se.project.model.store.Store;
 
 public class StoreDao implements IStore {
-
+  
+	
+	/* get all store details  */
   @Override
   public ObservableList<Store> getListFromDB() {
     // TODO Auto-generated method stub
@@ -52,7 +54,9 @@ public class StoreDao implements IStore {
 
     return storeList;
   }
-
+  
+  
+  /* get all store available to return bike  */
   @Override
   public ObservableList<String> getStoreAvai() {
     // TODO Auto-generated method stub
@@ -80,7 +84,8 @@ public class StoreDao implements IStore {
 
     return storeList;
   }
-
+  
+  /* update store data when return */
   public void updateStoreReturn(int bikeId, int storeId) {
     try {
       Connection con = Context.getConnection();

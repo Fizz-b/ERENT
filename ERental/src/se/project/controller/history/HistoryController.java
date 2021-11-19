@@ -12,7 +12,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.image.Image;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
-import se.project.interfaces.dao.RentHisDao;
+import se.project.interfaces.IHistory;
+import se.project.interfaces.dao.HistoryDao;
+
 import se.project.model.history.ItemHistory;
 import se.project.util.DateUtils;
 
@@ -24,7 +26,7 @@ public class HistoryController{
 	@FXML
 	private FlowPane returnFlow;
 	private int id;
-	private RentHisDao r = new RentHisDao();
+	private IHistory r = new HistoryDao();
 
 	public void setId(int i) {
 		this.id = i;

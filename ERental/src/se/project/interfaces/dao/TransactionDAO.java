@@ -6,7 +6,9 @@ import se.project.database.Context;
 import se.project.interfaces.ITransaction;
 
 public class TransactionDAO implements ITransaction {
-
+ 
+	
+  /* Save transaction info to DB */
   @Override
   public void saveTransaction(int orID, String msg, float money) {
     try {

@@ -12,7 +12,7 @@ public class RentHistoryController {
   @FXML
   private ImageView img;
   @FXML
-  private Text bikeName;
+  private Label bikeName;
 
   @FXML
   private Label money;
