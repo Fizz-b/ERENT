@@ -34,9 +34,11 @@ import se.project.model.store.Store;
 
 public class HomeController implements Initializable {
 	private int custId;
+
 	public void setId(int i) {
 		this.custId = i;
 	}
+    
 	@FXML
 	private TableColumn<Store, String> storeNameCol;
 	@FXML
@@ -49,114 +51,35 @@ public class HomeController implements Initializable {
 	private TableColumn<Store, String> storeStatusCol;
 	@FXML
 	private TableView<Store> storeTable;
-	@FXML
-	private TableColumn<BikeType, String> bikeName;
-	@FXML
-	private TableColumn<BikeType, String> bikeType;
-	@FXML
-	private TableColumn<BikeType, Integer> bikeManu; // manufacture
-	@FXML
-	private TableColumn<BikeType, String> bikeProducer;
-	@FXML
-	private TableColumn<BikeType, Integer> bikeCost;
-	@FXML
-	private TableView<BikeType> bikeTable;
+
 	@FXML
 	private Pane pnlOverview1;
 	@FXML
 	private TextField searchBar;
 	@FXML
 	private Pane searchPane;
-	@FXML
-	private Button backBtn;
-	private BikeType bike;
 	
+
+
 	private IBike iBike = new BikeDao();
 	private IStore iStore;
-    
-
-	
 
 	// click to a store load bike of that store
 	@FXML
-	void chooseRow(MouseEvent event){
-		ObservableList<BikeType> bikeList = iBike.getListFromDB(storeTable.getSelectionModel().getSelectedItem().getName());
-		
+	void chooseRow(MouseEvent event) {
+		ObservableList<BikeType> bikeList = iBike
+				.getListFromDB(storeTable.getSelectionModel().getSelectedItem().getName());
+
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(getClass().getResource("/se/project/gui/category/catPane.fxml"));
 		try {
 
 			Parent root = loader.load();
 			CategoryController controller = loader.getController();
-			
-            controller.setStoreName(storeTable.getSelectionModel().getSelectedItem().getName());
-            controller.setCustId(custId);
-            controller.initBike(bikeList);
-			// load
-			Stage stage = (Stage) (Stage) ((Node) event.getSource()).getScene().getWindow();
-			stage.setScene(new Scene(root));
-			stage.show();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		/*
-		ObservableList<BikeType> dataList = iBike
-				.getListFromDB(storeTable.getSelectionModel().getSelectedItem().getName());
-		bikeTable.setItems(dataList);
 
-		// Wrap the ObservableList in a FilteredList (initially display all data).
-		FilteredList<BikeType> filteredData = new FilteredList<>(dataList, b -> true);
-
-		// 2. Set the filter Predicate whenever the filter changes.
-		searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
-			filteredData.setPredicate(biketype -> {
-				// If filter text is empty, display all persons.
-
-				if (newValue == null || newValue.isEmpty()) {
-					return true;
-				}
-
-				// Compare first name and last name of every person with filter text.
-				String lowerCaseFilter = newValue.toLowerCase();
-
-				if (biketype.getName().toLowerCase().indexOf(lowerCaseFilter) != -1) {
-					return true; // Filter matches first name.
-				}
-
-				else
-					return false; // Does not match.
-			});
-		});
-
-		// 3. Wrap the FilteredList in a SortedList.
-		SortedList<BikeType> sortedData = new SortedList<>(filteredData);
-
-		// 4. Bind the SortedList comparator to the TableView comparator.
-		// Otherwise, sorting the TableView would have no effect.
-		sortedData.comparatorProperty().bind(bikeTable.comparatorProperty());
-
-		// 5. Add sorted (and filtered) data to the table.
-		bikeTable.setItems(sortedData);
-		bikeTable.toFront();  */
-	}
-
-	// click bike load detail of that bike
-	@FXML
-	void chooseBike(MouseEvent event) {
-
-		bike = iBike.getBikeFromDB(bikeTable.getSelectionModel().getSelectedItem().getName());
-		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(getClass().getResource("/se/project/gui/home/itemDetail.fxml"));
-		try {
-
-			Parent root = loader.load();
-			ItemController controller = loader.getController();
-			controller.setBik(bike); // bike thuong
-        
-        
-			controller.setId(custId);
-            controller.initItem(bike);
+			controller.setStoreName(storeTable.getSelectionModel().getSelectedItem().getName());
+			controller.setCustId(custId);
+			controller.initBike(bikeList);
 			// load
 			Stage stage = (Stage) (Stage) ((Node) event.getSource()).getScene().getWindow();
 			stage.setScene(new Scene(root));
@@ -194,14 +117,8 @@ public class HomeController implements Initializable {
 		storeStatusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
 		iStore = new StoreDao();
 
-
-		bikeName.setCellValueFactory(new PropertyValueFactory<>("name")); // map with type in class BikeType
-		bikeType.setCellValueFactory(new PropertyValueFactory<>("type"));
-		bikeManu.setCellValueFactory(new PropertyValueFactory<>("manufacture"));
-		bikeProducer.setCellValueFactory(new PropertyValueFactory<>("producer"));
-		bikeCost.setCellValueFactory(new PropertyValueFactory<>("cost"));
 		pnlOverview1.toFront();
-		storeTable.toFront();
+	
 
 		ObservableList<Store> dataList = iStore.getListFromDB();
 		// Wrap the ObservableList in a FilteredList (initially display all data).
@@ -229,7 +146,7 @@ public class HomeController implements Initializable {
 					return false; // Does not match.
 			});
 		});
-          
+
 		// 3. Wrap the FilteredList in a SortedList.
 		SortedList<Store> sortedData = new SortedList<>(filteredData);
 

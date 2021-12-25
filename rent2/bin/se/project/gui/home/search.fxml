@@ -75,15 +75,6 @@
                   </HBox>
                   <StackPane layoutX="23.0" layoutY="235.0" prefHeight="283.0" prefWidth="794.0">
                      <children>
-                        <TableView fx:id="bikeTable" onMouseClicked="#chooseBike" prefHeight="235.0" prefWidth="792.0" style="-fx-border-radius: 10 10 0 0;">
-                           <columns>
-                              <TableColumn fx:id="bikeName" prefWidth="139.19997864961624" style="-fx-alignment: center;" text="Name" />
-                              <TableColumn fx:id="bikeType" prefWidth="152.8000030517578" style="-fx-alignment: center;" text="Type" />
-                              <TableColumn fx:id="bikeManu" prefWidth="137.5999755859375" style="-fx-alignment: center;" text="Manufactur" />
-                              <TableColumn fx:id="bikeProducer" prefWidth="228.7999267578125" style="-fx-alignment: center;" text="Producer" />
-                              <TableColumn fx:id="bikeCost" minWidth="0.0" prefWidth="132.0" style="-fx-alignment: center;" text="Cost" />
-                           </columns>
-                        </TableView>
                         <TableView fx:id="storeTable" onMouseClicked="#chooseRow" prefHeight="284.0" prefWidth="794.0" style="-fx-border-radius: 10 10 0 0;">
                            <columns>
                               <TableColumn fx:id="storeNameCol" prefWidth="130.3999900817871" style="-fx-alignment: center;" text="Name" />
