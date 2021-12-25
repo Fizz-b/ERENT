@@ -19,17 +19,24 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import se.project.dao.BikeDao;
 import se.project.dao.OrderDao;
 import se.project.dao.StoreDao;
 import se.project.dao.TransactionDAO;
+import se.project.dao.UserDao;
+import se.project.interfaces.IBike;
 import se.project.interfaces.IMessageService;
 import se.project.interfaces.IOrder;
 import se.project.interfaces.IStore;
 import se.project.interfaces.ITransaction;
+import se.project.interfaces.IUser;
+import se.project.model.bike.BikeType;
 import se.project.model.order.Order;
 import se.project.model.payment.CreditCard;
-import se.project.model.payment.ICard;
+
 import se.project.model.payment.PayByCard;
+import se.project.model.payment.PayService;
+import se.project.model.user.Customer;
 import se.project.util.DateUtils;
 import se.project.util.EmailService;
 
@@ -59,7 +66,8 @@ public class BankGateController implements Initializable {
 	CreditCard card = new CreditCard();  // k khoi tao the moi
 	IMessageService service;
 
-      
+    private	BikeType bike;
+    private Customer customer;
 	public void setOrder(Order order2) {
 		this.order = order2;
 
@@ -75,7 +83,9 @@ public class BankGateController implements Initializable {
 			
 			PayController controller= loader.getController();
 			controller.setOrder(order);
-			controller.initData(order.getBike(), order);
+			  IBike iBike = new BikeDao();
+			  bike = iBike.getBikeById(Integer.toString(order.getBikeId()));
+			controller.initData(order);
 	
 			Stage stage = (Stage) (Stage) ((Node) event.getSource()).getScene().getWindow();
 			stage.setScene(new Scene(root));
@@ -106,27 +116,31 @@ public class BankGateController implements Initializable {
 			JOptionPane.showMessageDialog(null, "Card in used");
 
 		} else {
-
+			 IBike iBike = new BikeDao();
+			 bike = iBike.getBikeById(Integer.toString(order.getBikeId()));
+			 
+			 IUser iUser = new UserDao();
+			 customer = iUser.getUserById(Integer.toString(order.getCustId()));
 			// get input
 
 			card = new CreditCard(bank.getText(), cardNum.getText().replaceAll("\\s", ""), date.getValue(),name.getText());
-			ICard payment = new PayByCard(card); // can luu the vao bang transaction
+			PayService payService = new PayService(new PayByCard(card));// can luu the vao bang transaction
 			formatDateTime = LocalDateTime.now().format(DateUtils.format);
-
+                 
 			if (order.getId() == 0) {
 				// thread save transaction - function // to insert and update bike Table
-				isSuccess = payment.updateBalance(order.getBike().getDeposit());  // rent
+				isSuccess = payService.pay(bike.getDeposit());  // rent
 				if (isSuccess) {
 					order.setTimeCreate(formatDateTime);
 					threadRent();
-					threadEmail(order.getBike().getDeposit());
+					//threadEmail(bike.getDeposit());
 
 				}
 			} else if (order.getId() != 0) {
-				isSuccess = payment.updateBalance(order.getBike().getDeposit(), order.getTotal());
+				isSuccess = payService.pay(bike.getDeposit(), order.getTotal());
 				if (isSuccess) {
 					threadReturn();  
-					threadEmail(order.getTotal());
+					//threadEmail(order.getTotal());
 				}
 			}
 			
@@ -149,12 +163,12 @@ public class BankGateController implements Initializable {
 
 			result.setMsg(messageA.getText());
 			if (order.getTimeFinish()==null) {
-				result.setMoney(DateUtils.formatter.format(order.getBike().getDeposit()));
+				result.setMoney(DateUtils.formatter.format(bike.getDeposit()));
 			} else {
 				result.setMoney(DateUtils.formatter.format(order.getTotal()));/// format
 			}
 			result.setTime(formatDateTime);
-			result.setCustId(order.getCust().getId());
+			result.setCustId(order.getCustId());
 			Stage stage = (Stage) payBtn.getScene().getWindow();
 			stage.setScene(new Scene(root));
 			stage.show();
@@ -175,9 +189,9 @@ public class BankGateController implements Initializable {
 			@Override
 			public void run() {
 				TransactionUtils.saveTransacToDB(order);
-				int orderId = iOrder.getOrderId(order.getCust().getId());
+				int orderId = iOrder.getOrderId(order.getCustId());
 				order.setId(orderId);
-				iTransaction.saveTransaction(orderId, messageA.getText(), order.getBike().getDeposit(),
+				iTransaction.saveTransaction(orderId, messageA.getText(),bike.getDeposit(),
 						cardNum.getText().replaceAll("\\s", ""));
 			}
 
@@ -194,12 +208,12 @@ public class BankGateController implements Initializable {
 						cardNum.getText().replaceAll("\\s", ""));
 
 				/* TO DO IMPLEMENT ORDER.GETTOTAL */
-				iTransaction.updateReturn(order.getId(), order.getBike().getId(), order.getTotal(),
+				iTransaction.updateReturn(order.getId(), bike.getId(), order.getTotal(),
 						order.getTimeFinish(), order.getReturnId()); // order.get total thay cho 0 // them returnId vao
 				/* TO DO IMPLEMENT pick store return o ORDER CONTROLLER */
-				iStore.updateStoreReturn(order.getBike().getId(), Integer.valueOf(order.getReturnId())); // store id
+				iStore.updateStoreReturn(order.getBikeId(), Integer.valueOf(order.getReturnId())); // store id
 																											// from
-																											// return
+							 																				// return
 																											// return ve
 																											// store nao
 				// order.setTimeFinish(formatDateTime); // chi tinh khi hoan thanh thanh toan
@@ -215,7 +229,7 @@ public class BankGateController implements Initializable {
 			@Override
 			public void run() { // need to implement overall
 				service = new EmailService();
-				service.sendEmail(order.getCust().getEmail(), order.getBike().getName(), order.getTimeCreate(),
+				service.sendEmail(customer.getEmail(),bike.getName(), order.getTimeCreate(),
 						money);
 				
 			}

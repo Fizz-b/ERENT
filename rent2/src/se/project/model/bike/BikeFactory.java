@@ -1,9 +1,9 @@
 package se.project.model.bike;
 
 public class BikeFactory {
-	  public BikeType getBike(String type) {
+	  public static BikeType getBike(String type) {
 		    switch (type) {
-		      case "Ebike":
+		      case "EBike":
 		        return new EBike();
 
 		      case "Bike":

@@ -3,6 +3,6 @@ package se.project.model.payment;
 public interface PayStrategy {
 
  // tru tien khi return
-  public boolean updateBalance(double d);
-
+  public boolean pay(double paymentAmount);
+  public boolean pay(int deposit, double total);
 }

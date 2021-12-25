@@ -22,6 +22,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import se.project.controller.category.CategoryController;
 import se.project.dao.BikeDao;
 import se.project.dao.StoreDao;
 import se.project.database.Context;
@@ -78,7 +79,28 @@ public class HomeController implements Initializable {
 
 	// click to a store load bike of that store
 	@FXML
-	void chooseRow() {
+	void chooseRow(MouseEvent event){
+		ObservableList<BikeType> bikeList = iBike.getListFromDB(storeTable.getSelectionModel().getSelectedItem().getName());
+		
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("/se/project/gui/category/catPane.fxml"));
+		try {
+
+			Parent root = loader.load();
+			CategoryController controller = loader.getController();
+			
+            controller.setStoreName(storeTable.getSelectionModel().getSelectedItem().getName());
+            controller.setCustId(custId);
+            controller.initBike(bikeList);
+			// load
+			Stage stage = (Stage) (Stage) ((Node) event.getSource()).getScene().getWindow();
+			stage.setScene(new Scene(root));
+			stage.show();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		/*
 		ObservableList<BikeType> dataList = iBike
 				.getListFromDB(storeTable.getSelectionModel().getSelectedItem().getName());
 		bikeTable.setItems(dataList);
@@ -116,7 +138,7 @@ public class HomeController implements Initializable {
 
 		// 5. Add sorted (and filtered) data to the table.
 		bikeTable.setItems(sortedData);
-		bikeTable.toFront();
+		bikeTable.toFront();  */
 	}
 
 	// click bike load detail of that bike

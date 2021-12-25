@@ -33,17 +33,20 @@ public class OrderDao implements IOrder {
 
 				order.setId(Integer.valueOf(rs.getString(1)));
 				order.setTimeCreate(rs.getString(2));
-				BikeType bike = ibike.getBikeById(rs.getString(3));
 				
+				/*
+				BikeType bike = ibike.getBikeById(rs.getString(3));
 				File file = new File("src/se/project/image/" + bike.getName() + ".jpeg");
 				Image image = new Image(file.toURI().toString());
 				bike.setI(image);
 				bike.setId(Integer.valueOf(rs.getString(3)));
-				order.setBike(bike);
+				order.setBike(bike);  */
+				order.setBikeId(Integer.valueOf(rs.getString(3)));
 				
 
 			} else {
-				order.setBike(null);
+				//order.setBike(null);
+				order = null;
 			}
 
 			con.close();

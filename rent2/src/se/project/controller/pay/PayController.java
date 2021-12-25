@@ -21,8 +21,9 @@ import javafx.stage.Stage;
 import javax.swing.JOptionPane;
 
 import se.project.controller.home.HomeController;
-
+import se.project.dao.BikeDao;
 import se.project.dao.UserDao;
+import se.project.interfaces.IBike;
 import se.project.interfaces.IUser;
 import se.project.model.bike.BikeType;
 import se.project.model.order.Order;
@@ -77,7 +78,7 @@ public class PayController {
   @FXML
   private Label total1;
 
-  private BikeType bike;
+ 
   private Order order;
   private HomeController shop;
   private int custId;
@@ -117,21 +118,6 @@ public class PayController {
     this.total1 = total1;
   }
 
-  public void setBike(BikeType bike) {
-    this.bike = bike;
-  }
-
-  
- 
-
-  public BikeType getBikeData() {
-    return bike;
-  }
-
-  public void setBikeData(BikeType b) {
-    this.bike = b;
-  }
-
   public void setOrder(Order order2) {
     this.order = order2;
 
@@ -150,7 +136,8 @@ public class PayController {
     try {
       Parent root = loader.load();
       shop = loader.getController();
-      shop.setId(order.getCust().getId());
+      shop.setId(order.getCustId());
+      
       Stage stage = (Stage) (Stage) ((Node) event.getSource()).getScene().getWindow();
       stage.setScene(new Scene(root));
       stage.show();
@@ -185,16 +172,17 @@ public class PayController {
     }
   }
 
-  public void initData(BikeType bike, Order order) {
-
+  public void initData(Order order) {
+	  IBike iBike = new BikeDao();
+	  BikeType bike = iBike.getBikeById(Integer.toString(order.getBikeId()));
     // init data
-    setBikeData(bike);
+    //setBikeData(bike);
     bikeName.setText(bike.getName());
-    deposit.setText(DateUtils.formatter.format(order.getBike().getDeposit()));
+    deposit.setText(DateUtils.formatter.format(bike.getDeposit()));
     rentFee.setText(DateUtils.formatter.format(order.getTotal()));
      if(order.getId()!=0) {
     	 // not work
-    	 excessCash.setText(DateUtils.formatter.format(order.getBike().getDeposit()));
+    	 excessCash.setText(DateUtils.formatter.format(bike.getDeposit()));
     	
 			// LocalDateTime dateTime = LocalDateTime.parse(timeCreate, format);
 		 
@@ -204,9 +192,11 @@ public class PayController {
     	 total1.setText(DateUtils.formatter.format(a));
     	 
      }else {
-    total.setText(DateUtils.formatter.format(order.getBike().getDeposit())); // tinh tong
-    total1.setText(DateUtils.formatter.format(order.getBike().getDeposit()));} // tinh tong
-    name.setText(order.getCust().getName());
+    total.setText(DateUtils.formatter.format(bike.getDeposit())); // tinh tong
+    total1.setText(DateUtils.formatter.format(bike.getDeposit()));} // tinh tong
+    IUser iUser = new  UserDao();
+    String userName =  iUser.getNameById(Integer.toString(order.getCustId()));
+    name.setText(userName);
     cost.setText(Integer.toString(bike.getCost()));
     img.setImage(bike.getI());
     // load pane

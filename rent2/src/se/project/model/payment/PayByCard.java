@@ -1,6 +1,6 @@
 package se.project.model.payment;
 
-public class PayByCard implements ICard{
+public class PayByCard implements PayStrategy{
 
   // update balance
   private CreditCard card;
@@ -9,20 +9,18 @@ public class PayByCard implements ICard{
     this.card = card;
   }
 
- 
-
-  
-  public boolean updateBalance(double money) {
+  public boolean pay(double paymentAmount) {
     // TODO Auto-generated method stub
-    return card.debit(money);
+    return card.debit(paymentAmount);
   }
 
    // true thanh cong
-  public boolean updateBalance(int deposit, double total) {
+  public boolean pay(int deposit, double total) {
     // TODO Auto-generated method stub
     if(card.debit((int)total)) {
     card.credit(deposit);
     return true;
    }
      return false;
-}}
+}
+  }

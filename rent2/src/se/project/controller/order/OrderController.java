@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
+
+import javax.swing.JOptionPane;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,7 +23,9 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import se.project.controller.home.MainController;
 import se.project.controller.pay.PayController;
+import se.project.dao.BikeDao;
 import se.project.dao.StoreDao;
+import se.project.interfaces.IBike;
 import se.project.interfaces.IStore;
 import se.project.model.bike.BikeType;
 import se.project.model.order.Order;
@@ -38,6 +43,8 @@ public class OrderController implements Initializable {
 	private Text bikeName;
 	@FXML
 	private Label deposit;
+	@FXML
+	private Label orderCode;
 	@FXML
 	private Label deposit1;
 	@FXML
@@ -94,20 +101,27 @@ public class OrderController implements Initializable {
 	@FXML
 	void returnBike(MouseEvent event) {
 		// change detail
+		String storeReturn = (String) choice.getValue();
+		if(storeReturn == null) {
+			JOptionPane.showMessageDialog(null, "Choose store to return");
+		}else {
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(getClass().getResource("/se/project/gui/pay/pay.fxml"));
 		try {
 			Parent root = loader.load();
 			PayController pay = loader.getController();
-			String value = (String) choice.getValue();
+		
 			iStore = new StoreDao();
 
-			order.setReturnId(iStore.getStoreId(value)); // can bao neu chua chon store return
+			order.setReturnId(iStore.getStoreId(storeReturn)); // can bao neu chua chon store return
 			LocalDateTime dateTime = LocalDateTime.now();
 			order.getTotalTime(dateTime); // tinh tong thoi gian thanh toan
 			order.setTimeFinish(dateTime.format(DateUtils.format)); // set String right format // time finish
 			pay.setOrder(order);
-			pay.initData(order.getBike(), order);
+			
+			IBike iBike = new BikeDao();
+			BikeType bike = iBike.getBikeById(Integer.toString(order.getBikeId()));
+			pay.initData(order);
 
 			Stage stage = (Stage) (Stage) returnBtn.getScene().getWindow();
 			stage.setScene(new Scene(root));
@@ -115,6 +129,7 @@ public class OrderController implements Initializable {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
 		}
 	}
 
@@ -126,7 +141,7 @@ public class OrderController implements Initializable {
 			Parent root = loader.load();
 			MainController home = new MainController();
 			home = loader.getController();
-			home.setId(order.getCust().getId());
+			home.setId(order.getCustId());
 			home.initButton();
 			Stage stage = (Stage) (Stage) ((Node) event.getSource()).getScene().getWindow();
 			stage.setScene(new Scene(root));
@@ -138,14 +153,18 @@ public class OrderController implements Initializable {
 	}
 
 	public void initPane(Order order) {
+		IBike iBike = new BikeDao();
+		BikeType bike = iBike.getBikeById(Integer.toString(order.getBikeId()));
 		LocalDateTime s = LocalDateTime.now();
 		s.format(DateUtils.format);
+		
+		orderCode.setText(Integer.toString(order.getId()));
 		setTotalTime(order.getTotalTime(s));
 		setTime(order.getTimeCreate());
-		setDeposit(DateUtils.formatter.format(order.getBike().getDeposit()));
+		setDeposit(DateUtils.formatter.format(bike.getDeposit()));
 		setTotal(DateUtils.formatter.format(order.getTotal()));
-		setBikeName(order.getBike().getName());
-		setImage(order.getBike().getI()); // getImage
+		setBikeName(bike.getName());
+		setImage(bike.getI()); // getImage
 	}
 
 	@Override
@@ -157,5 +176,14 @@ public class OrderController implements Initializable {
 			choice.getItems().add(s);
 		}
 	}
+	
+
+    @FXML
+    void refresh(MouseEvent event) {
+    	LocalDateTime s = LocalDateTime.now();
+		s.format(DateUtils.format);
+		setTotalTime(order.getTotalTime(s));
+		setTotal(DateUtils.formatter.format(order.getTotal()));
+    }
 
 }

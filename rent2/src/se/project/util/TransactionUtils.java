@@ -18,13 +18,13 @@ public class TransactionUtils {
 																						// bike Table
 
 			ps.setString(1, order.getTimeCreate());
-			ps.setString(2, Integer.toString(order.getBike().getId()));
-			ps.setString(3, Integer.toString(order.getCust().getId()));
+			ps.setString(2, Integer.toString(order.getBikeId()));
+			ps.setString(3, Integer.toString(order.getCustId()));
 			ps.execute();
 
 			// get store id as input update store dock when rent
 			PreparedStatement ps1 = con.prepareStatement("SELECT updateStoreRent(?)");
-			ps1.setString(1, Integer.toString(order.getBike().getId()));
+			ps1.setString(1, Integer.toString(order.getBikeId()));
 			ps1.execute();
 			con.close();
 

@@ -9,5 +9,7 @@ public interface IBike {
   public ObservableList<BikeType> getAllBike();
   public BikeType getBikeFromDB(String bikeName);
   public BikeType getBikeById(String id);
+  public String getBikeType(String id);
+  public Integer getIdByName(String name);
   public boolean checkBikeRent(String bikeId);
 }

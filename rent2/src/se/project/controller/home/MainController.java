@@ -100,9 +100,11 @@ public class MainController {
 
 				IOrder iOrder = new OrderDao();
 				Order order = iOrder.getOrder(custId);
+				/*
 				IUser cust = new UserDao();
 				Customer customer = cust.getUserById(Integer.toString(custId));
-				order.setCust(customer);
+				order.setCust(customer);*/
+				order.setCustId(custId);
 				or.setOrder(order);
 				or.initPane(order);
 				Stage stage = (Stage) (Stage) btnReturn.getScene().getWindow();

@@ -34,7 +34,32 @@ public class UserDao implements IUser {
     }
     return customer;
   }
+  
+  @Override
+  public String getNameById(String id) {
+    String userName = null;
+    try {
+
+      Connection con = Context.getConnection();
+      PreparedStatement ps = con.prepareStatement(
+          "SELECT name FROM useraccount  where id = ?");
+      ps.setString(1, id);
+      ResultSet rs = ps.executeQuery();
+     if( rs.next()) {
+    	 userName = rs.getString(1);
+     }
+     
+      con.close();
+
+    } catch (Exception e) {
+      System.out.println(e);
+
+    }
+    return userName;
+  }
 	
+  
+  
   @Override
   public Customer getUserById(String id) {
     Customer customer = new Customer();

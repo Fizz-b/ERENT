@@ -1,7 +1,11 @@
 package application;
 
+import java.time.LocalDate;
+
 import se.project.model.payment.CreditCard;
 import se.project.model.payment.PayByCard;
+import se.project.model.payment.PayService;
+import se.project.model.payment.PayStrategy;
 import se.project.util.TransactionUtils;
 
 public class Main {
@@ -22,11 +26,8 @@ public class Main {
         System.out.println("After Formatting: " + formatDateTime);
         */
         CreditCard card = new CreditCard();
-    	/*card.setName("a");
-		card.setDate(LocalDate.now());
-		card.setBank("a");
-		card.setMoney(1000000);
-		card.setCardNum("a");*/
+        PayService payService = new PayService(new PayByCard(card));
+        System.out.println(payService.pay(1000000));
 	    /*
 	       Payment pay = new Payment();
 	       pay.selectPayment(new PayByCard(card));

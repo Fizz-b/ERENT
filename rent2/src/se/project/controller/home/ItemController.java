@@ -36,7 +36,8 @@ public class ItemController {
 
 	@FXML
 	private Label license;
-
+	@FXML
+	private Label cost;
 	@FXML
 	private Label manufacture;
 
@@ -61,7 +62,7 @@ public class ItemController {
 	@FXML
 	private Label weight;
 
-	private Order order;
+
 	private PayController pay;
 	private BikeType bike;
 	//private BikeType bikeRent;
@@ -70,70 +71,7 @@ public class ItemController {
 		this.custId = i;
 	}
 
-	public ImageView getImg() {
-		return img;
-	}
-
-	public void setImg(ImageView image) {
-		this.img = image;
-	}
-
-	public Label getLicense() {
-		return license;
-	}
-
-	public void setLicense(Label license) {
-		this.license = license;
-	}
-
-	public Label getManufacture() {
-		return manufacture;
-	}
-
-	public void setManufacture(Label manufacture) {
-		this.manufacture = manufacture;
-	}
-
-	public Label getName() {
-		return name;
-	}
-
-	public void setName(Label name) {
-		this.name = name;
-	}
-
-	public AnchorPane getPaneItem() {
-		return paneItem;
-	}
-
-	public void setPaneItem(AnchorPane paneItem) {
-		this.paneItem = paneItem;
-	}
-
-	public Label getProducer() {
-		return producer;
-	}
-
-	public void setProducer(Label producer) {
-		this.producer = producer;
-	}
-
-	public Label getType() {
-		return type;
-	}
-
-	public void setType(Label type) {
-		this.type = type;
-	}
-
-	public Label getWeight() {
-		return weight;
-	}
-
-	public void setWeight(Label weight) {
-		this.weight = weight;
-	}
-
+     
 
 	// set BikeType
 	public void setBik(BikeType bike2) {
@@ -160,14 +98,15 @@ public class ItemController {
 					// access the controller and call a method
 					// access the controller and call a method
 					pay = loader.getController();
-					order = new Order();
-					order.setBike(bike);		
-					IUser cust = new UserDao();
-			        Customer customer = cust.getUserById(Integer.toString(custId));
-			        order.setCust(customer);
+					Order order = new Order();
+					
+					IBike ibike = new BikeDao();
+					int bikeId =  iBike.getIdByName(name.getText());
+					order.setBikeId(bikeId);
+					order.setCustId(custId);
 			        pay.setOrder(order);
-					pay.initData(bike, order);
-	
+					//pay.initData(bike, order);
+	                pay.initData(order);
 					Stage stage = (Stage) (Stage) rent.getScene().getWindow();
 					stage.setScene(new Scene(root));
 					stage.show();
@@ -207,20 +146,18 @@ public class ItemController {
 		}
 	}
 
-	public void setOrder(Order order2) {
-		// TODO Auto-generated method stub
-		this.order = order2;
-	}
+	
 
 	public void initItem(BikeType bike) {
 		img.setImage(bike.getI());
-		setBik(bike);
+		//setBik(bike);// ?
 		name.setText(bike.getName());
 		type.setText(bike.getType());
 		weight.setText(Integer.toString(bike.getWeight()));
 		license.setText(bike.getLicense());
 		manufacture.setText(bike.getManufacture());
 		producer.setText(bike.getProducer());
+		cost.setText(Integer.toString(bike.getCost()));
 	}
 
 }
