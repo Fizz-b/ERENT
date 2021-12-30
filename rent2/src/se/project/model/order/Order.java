@@ -3,8 +3,8 @@ package se.project.model.order;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-import se.project.dao.BikeDao;
-import se.project.interfaces.IBike;
+import se.project.database.api.bike.BikeDao;
+import se.project.database.api.bike.IBike;
 import se.project.model.bike.BikeFactory;
 import se.project.model.bike.BikeType;
 import se.project.model.user.Customer;
@@ -12,10 +12,10 @@ import se.project.util.DateUtils;
 
 public class Order {
 
-	private int id = 0; // id = 0 chua thue
+	private int id = 0; 
 	private int bikeId;
 	private int custId; // should have cust id
-	private int time; // k can biet
+	private int time; 
 	private String timeCreate;
 	private String timeFinish;
 	private String returnId;
@@ -89,7 +89,7 @@ public class Order {
 		this.time = (int) l;
 	}
 
-	// tinh dua tren time create va finish
+	
 	public double getTotal() {
 		IBike iBike = new BikeDao();
 		String bikeType = iBike.getBikeType(Integer.toString(bikeId));

@@ -11,7 +11,7 @@ public class Store {
 	private int id;
 	private String status;
 	private Image store;
-
+     
 	public void setImage(Image store) {
 		this.store = store;
 	}
@@ -73,11 +73,6 @@ public class Store {
 		this.rent = rent;
 	}
 
-	/*
-	 * public String getStatusFormat() { if(this.getStatus() == StoreStatus.FULL) {
-	 * return "Full"; }else if(this.getStatus() == StoreStatus.available) { return
-	 * "Available"; }else if(this.getStatus() ==StoreStatus.EMPTY) { return "Empty";
-	 * }else return "Invalid Status"; }
-	 */
+
 
 }

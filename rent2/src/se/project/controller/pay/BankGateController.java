@@ -19,17 +19,19 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import se.project.dao.BikeDao;
-import se.project.dao.OrderDao;
-import se.project.dao.StoreDao;
-import se.project.dao.TransactionDAO;
-import se.project.dao.UserDao;
-import se.project.interfaces.IBike;
+import se.project.database.api.bike.BikeDao;
+import se.project.database.api.bike.IBike;
+import se.project.database.api.order.IOrder;
+import se.project.database.api.order.OrderDao;
+import se.project.database.api.store.IStore;
+import se.project.database.api.store.StoreDao;
+import se.project.database.api.transaction.ITransaction;
+import se.project.database.api.transaction.IValidTransact;
+import se.project.database.api.transaction.TransactionDAO;
+import se.project.database.api.transaction.ValidTransact;
+import se.project.database.api.user.IUser;
+import se.project.database.api.user.UserDao;
 import se.project.interfaces.IMessageService;
-import se.project.interfaces.IOrder;
-import se.project.interfaces.IStore;
-import se.project.interfaces.ITransaction;
-import se.project.interfaces.IUser;
 import se.project.model.bike.BikeType;
 import se.project.model.order.Order;
 import se.project.model.payment.CreditCard;
@@ -39,8 +41,6 @@ import se.project.model.payment.PayService;
 import se.project.model.user.Customer;
 import se.project.util.DateUtils;
 import se.project.util.EmailService;
-
-import se.project.util.TransactionUtils;
 
 public class BankGateController implements Initializable {
 
@@ -64,7 +64,7 @@ public class BankGateController implements Initializable {
 	private Order order; // need to pass order from
 	String formatDateTime;
 	CreditCard card = new CreditCard();  // k khoi tao the moi
-	IMessageService service;
+	private IMessageService service;
 
     private	BikeType bike;
     private Customer customer;
@@ -102,27 +102,14 @@ public class BankGateController implements Initializable {
 		boolean isSuccess = false;
 		// can check xem the da su dung cho tk nao chua
 		// check length = 16 contain only digit
-		if (name.getText() == "" || cardNum.getText() == "" || bank.getText() == ""
-				|| card.validateDate(date.getValue()) || cardNum.getText().replaceAll("\\s", "").length() != 16
-				|| !cardNum.getText().replaceAll("\\s", "").matches("[0-9]+")) {
-			JOptionPane.showMessageDialog(null, "Enter full infomation and card number is 16 digit !");
-
-		} else if (!TransactionUtils.checkTransact(cardNum.getText().replaceAll("\\s", ""),Integer.toString(order.getId()))) {
-			
-			JOptionPane.showMessageDialog(null, "You need to same card as first transaction");
-
-		} else if (TransactionUtils.checkCard(cardNum.getText().replaceAll("\\s", ""),Integer.toString(order.getId()))) {
-			
-			JOptionPane.showMessageDialog(null, "Card in used");
-
-		} else {
+		if(validateCard()) {
 			 IBike iBike = new BikeDao();
 			 bike = iBike.getBikeById(Integer.toString(order.getBikeId()));
 			 
 			 IUser iUser = new UserDao();
 			 customer = iUser.getUserById(Integer.toString(order.getCustId()));
 			// get input
-
+               
 			card = new CreditCard(bank.getText(), cardNum.getText().replaceAll("\\s", ""), date.getValue(),name.getText());
 			PayService payService = new PayService(new PayByCard(card));// can luu the vao bang transaction
 			formatDateTime = LocalDateTime.now().format(DateUtils.format);
@@ -149,8 +136,8 @@ public class BankGateController implements Initializable {
 				createResultPane();
 			} else
 				JOptionPane.showMessageDialog(null, "Not enough money");
+		
 		}
-
 	}
 
 	public void createResultPane() {
@@ -158,16 +145,16 @@ public class BankGateController implements Initializable {
 		loader.setLocation(getClass().getResource("/se/project/gui/pay/payResult.fxml"));
 		try {
 			Parent root = loader.load();
-			
 			ResultController result = loader.getController();
-
-			result.setMsg(messageA.getText());
+			
+            String money = null;
 			if (order.getTimeFinish()==null) {
-				result.setMoney(DateUtils.formatter.format(bike.getDeposit()));
+				money = DateUtils.formatter.format(bike.getDeposit());
 			} else {
-				result.setMoney(DateUtils.formatter.format(order.getTotal()));/// format
+				money = DateUtils.formatter.format(order.getTotal());
 			}
-			result.setTime(formatDateTime);
+			
+			result.initResultPane(money,messageA.getText() ,formatDateTime);
 			result.setCustId(order.getCustId());
 			Stage stage = (Stage) payBtn.getScene().getWindow();
 			stage.setScene(new Scene(root));
@@ -188,7 +175,8 @@ public class BankGateController implements Initializable {
 		Thread t2 = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				TransactionUtils.saveTransacToDB(order);
+				ITransaction iTransact = new TransactionDAO();
+				iTransact.saveTransacToDB(order);
 				int orderId = iOrder.getOrderId(order.getCustId());
 				order.setId(orderId);
 				iTransaction.saveTransaction(orderId, messageA.getText(),bike.getDeposit(),
@@ -211,12 +199,8 @@ public class BankGateController implements Initializable {
 				iTransaction.updateReturn(order.getId(), bike.getId(), order.getTotal(),
 						order.getTimeFinish(), order.getReturnId()); // order.get total thay cho 0 // them returnId vao
 				/* TO DO IMPLEMENT pick store return o ORDER CONTROLLER */
-				iStore.updateStoreReturn(order.getBikeId(), Integer.valueOf(order.getReturnId())); // store id
-																											// from
-							 																				// return
-																											// return ve
-																											// store nao
-				// order.setTimeFinish(formatDateTime); // chi tinh khi hoan thanh thanh toan
+				iStore.updateStoreReturn(order.getBikeId(), Integer.valueOf(order.getReturnId())); 
+	
 			}
 		});
 		t2.start(); // end thread 2
@@ -238,5 +222,23 @@ public class BankGateController implements Initializable {
 		t1.start(); // end thread
 	}
 
-
+   public boolean validateCard() {
+	   IValidTransact iCheck = new ValidTransact();
+	   if (name.getText() == "" || cardNum.getText() == "" || bank.getText() == ""
+				|| card.validateDate(date.getValue()) 
+				|| cardNum.getText().replaceAll("\\s", "").length() != 16
+				|| !cardNum.getText().replaceAll("\\s", "").matches("[0-9]+")) {
+			JOptionPane.showMessageDialog(null, "Enter full infomation and card number is 16 digit !");
+		}
+	   
+	   else if (!iCheck.checkSameCard(cardNum.getText().replaceAll("\\s", ""),Integer.toString(order.getId()))) { // check same card
+			JOptionPane.showMessageDialog(null, "You need to same card as first transaction");
+		} 
+	   
+	   else if (iCheck.checkCardUsed(cardNum.getText().replaceAll("\\s", ""),Integer.toString(order.getId()))) {// check cardUsed
+			JOptionPane.showMessageDialog(null, "Card in used");
+	   } else return true;
+	   
+	  return false;
+   }
 }

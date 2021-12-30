@@ -17,59 +17,47 @@ import se.project.model.order.Order;
 
 public class ResultController {
 
+	@FXML
+	private Button homeBtn;
+	@FXML
+	private Label money;
+	@FXML
+	private TextArea msg;
+	@FXML
+	private Label time;
+	@FXML
+	private Label transacCode;
+	private int custId;
 
-  @FXML
-  private Button homeBtn;
-  @FXML
-  private Label money;
-  @FXML
-  private TextArea msg;
-  @FXML
-  private Label time;
-  @FXML
-  private Label transacCode;
-  private int custId;
+	public void setCustId(int custId) {
+		this.custId = custId;
+	}
 
+	@FXML
+	void backHome(MouseEvent event) {
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("/se/project/gui/home/home.fxml"));
+		try {
+			Parent root = loader.load();
+			MainController shop = loader.getController();
 
-public void setCustId(int custId) {
-	this.custId = custId;
-}
+			// can reset order ve null neu thanh toan xog
 
-  @FXML
-  void backHome(MouseEvent event) {
-    FXMLLoader loader = new FXMLLoader();
-    loader.setLocation(getClass().getResource("/se/project/gui/home/home.fxml"));
-    try {
-      Parent root = loader.load();
-      MainController shop = loader.getController();
+			shop.setId(custId);
+			shop.initButton();
+			Stage stage = (Stage) (Stage) ((Node) event.getSource()).getScene().getWindow();
+			stage.setScene(new Scene(root));
+			stage.show();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
-      // can reset order ve null neu thanh toan xog
-    
-      shop.setId(custId);
-      shop.initButton();
-      Stage stage = (Stage) (Stage) ((Node) event.getSource()).getScene().getWindow();
-      stage.setScene(new Scene(root));
-      stage.show();
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-  }
-
-
-  public void setMoney(String m) {
-    money.setText(m);
-  }
-
-
-  public void setMsg(String string) {
-    msg.setText(string);
-  }
-
-
-  public void setTime(String t) {
-    time.setText(t);
-  }
-
+	public void initResultPane(String m, String message, String t) {
+		money.setText(m);
+		msg.setText(message);
+		time.setText(t);
+	}
 
 }

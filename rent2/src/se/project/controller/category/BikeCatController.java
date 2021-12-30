@@ -13,8 +13,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import se.project.controller.home.ItemController;
-import se.project.dao.BikeDao;
-import se.project.interfaces.IBike;
+import se.project.database.api.bike.BikeDao;
+import se.project.database.api.bike.IBike;
 import se.project.model.bike.BikeType;
 import se.project.model.order.Order;
 
@@ -30,32 +30,17 @@ public class BikeCatController {
 
     @FXML
     private Text status;
-	
 
-	public Text getStatus() {
-		return status;
-	}
-
-	public void setStatus(String string) {
-		status.setText(string);
-	}
 
 	public void setCustId(int custId) {
 		this.custId = custId;
 	}
 
-	public void setBikeText(String t) {
-		bikeText.setText(t);
+public void initBikePane(String sta,String bikeName,Image image) {
+	status.setText(sta);	
+	bikeText.setText(bikeName);
+	bikeImg.setImage(image);
 	}
-
-	public ImageView getBikeImg() {
-		return bikeImg;
-	}
-
-	public void setBikeImg(ImageView storeImg) {
-		this.bikeImg = storeImg;
-	}
-
 	@FXML
 	void loadDetail(MouseEvent event) {
 		IBike iBike = new BikeDao();
@@ -80,4 +65,7 @@ public class BikeCatController {
 		}
 
 	}
+	
+	
+	
 }

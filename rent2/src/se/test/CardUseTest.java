@@ -10,8 +10,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import se.project.database.Context;
 import se.project.database.MySQLConnection;
-
-import se.project.util.TransactionUtils;
+import se.project.interfaces.TransactionUtils;
 
 public class CardUseTest {
 

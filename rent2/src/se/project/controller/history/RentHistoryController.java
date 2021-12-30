@@ -21,11 +21,11 @@ public class RentHistoryController {
   private Label time;
   private ItemHistory item;
 
-  public void initItem(String n, String t, String m, Image im) {
-    bikeName.setText(n);
+  public void initItem(String name, String t, String m, Image image) {
+    bikeName.setText(name);
     time.setText(t);
     money.setText(m);
-    img.setImage(im);
+    img.setImage(image);
   }
 
   public ItemHistory getItem() {
