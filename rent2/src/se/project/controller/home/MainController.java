@@ -20,14 +20,16 @@ import javafx.stage.Stage;
 import se.project.controller.Util;
 import se.project.controller.history.HistoryController;
 import se.project.controller.order.OrderController;
-import se.project.dao.BikeDao;
-import se.project.dao.OrderDao;
-import se.project.dao.TransactionDAO;
-import se.project.dao.UserDao;
-import se.project.interfaces.IBike;
-import se.project.interfaces.IOrder;
-import se.project.interfaces.ITransaction;
-import se.project.interfaces.IUser;
+import se.project.database.api.bike.BikeDao;
+import se.project.database.api.bike.IBike;
+import se.project.database.api.order.IOrder;
+import se.project.database.api.order.OrderDao;
+import se.project.database.api.transaction.ITransaction;
+import se.project.database.api.transaction.IValidTransact;
+import se.project.database.api.transaction.TransactionDAO;
+import se.project.database.api.transaction.ValidTransact;
+import se.project.database.api.user.IUser;
+import se.project.database.api.user.UserDao;
 import se.project.model.order.Order;
 import se.project.model.user.Customer;
 import se.project.util.DateUtils;
@@ -86,9 +88,9 @@ public class MainController {
 
 	@FXML
 	void loadReturn(MouseEvent event) {
-		ITransaction iTransact = new TransactionDAO();
-
-		if (iTransact.checkTransactFinish(custId)) {
+		IValidTransact iCheck = new ValidTransact();
+           
+		if (iCheck.checkTransactFinish(custId)) {
 
 			JOptionPane.showMessageDialog(null, "RENT FIRST");
 		} else {
@@ -100,10 +102,6 @@ public class MainController {
 
 				IOrder iOrder = new OrderDao();
 				Order order = iOrder.getOrder(custId);
-				/*
-				IUser cust = new UserDao();
-				Customer customer = cust.getUserById(Integer.toString(custId));
-				order.setCust(customer);*/
 				order.setCustId(custId);
 				or.setOrder(order);
 				or.initPane(order);
@@ -118,8 +116,8 @@ public class MainController {
 	}
     
 	public void initButton() {
-		   ITransaction iTransact = new TransactionDAO();
-			if (iTransact.checkTransactFinish(custId)) {
+		IValidTransact iCheck = new ValidTransact();
+			if (iCheck.checkTransactFinish(custId)) {
 			   btnReturn.setVisible(false);
 			}else  	   btnReturn.setVisible(true);
 	}

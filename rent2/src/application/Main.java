@@ -2,11 +2,11 @@ package application;
 
 import java.time.LocalDate;
 
+import se.project.interfaces.TransactionUtils;
 import se.project.model.payment.CreditCard;
 import se.project.model.payment.PayByCard;
 import se.project.model.payment.PayService;
 import se.project.model.payment.PayStrategy;
-import se.project.util.TransactionUtils;
 
 public class Main {
 

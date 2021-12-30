@@ -21,10 +21,10 @@ import javafx.stage.Stage;
 import javax.swing.JOptionPane;
 
 import se.project.controller.home.HomeController;
-import se.project.dao.BikeDao;
-import se.project.dao.UserDao;
-import se.project.interfaces.IBike;
-import se.project.interfaces.IUser;
+import se.project.database.api.bike.BikeDao;
+import se.project.database.api.bike.IBike;
+import se.project.database.api.user.IUser;
+import se.project.database.api.user.UserDao;
 import se.project.model.bike.BikeType;
 import se.project.model.order.Order;
 import se.project.model.user.Customer;
@@ -46,8 +46,7 @@ public class PayController {
   @FXML
   private Label excessCash;
   
-  @FXML
-  private Button backBtn;
+  
 
   @FXML
   private Label total;
@@ -80,53 +79,17 @@ public class PayController {
 
  
   private Order order;
-  private HomeController shop;
-  private int custId;
-  public void setId(int id) {
-	  this.custId = id;
-  }
   
-  public void setTotal(Label total) {
-    this.total = total;
-  }
+  
+  
 
-  public void setDeposit(Label deposit) {
-    this.deposit = deposit;
-  }
-
-  public void setBikeName(Text bikeName) {
-    this.bikeName = bikeName;
-  }
-
-  public void setTime(Label time) {
-    this.time = time;
-  }
-
-  public void setRentFee(Label rentFee) {
-    this.rentFee = rentFee;
-  }
-
-  public void setCost(Label cost) {
-    this.cost = cost;
-  }
-
-  public void setName(Label name) {
-    this.name = name;
-  }
-
-  public void setTotal1(Label total1) {
-    this.total1 = total1;
-  }
 
   public void setOrder(Order order2) {
     this.order = order2;
 
   }
 
-  public void setLabelText(String depo) {
-    deposit.setText(depo);
-    total.setText(depo);
-  }
+ 
 
   @FXML
   public void back(MouseEvent event) {
@@ -135,7 +98,7 @@ public class PayController {
     loader.setLocation(getClass().getResource("/se/project/gui/home/search.fxml"));
     try {
       Parent root = loader.load();
-      shop = loader.getController();
+      HomeController  shop = loader.getController();
       shop.setId(order.getCustId());
       
       Stage stage = (Stage) (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -192,8 +155,8 @@ public class PayController {
     	 total1.setText(DateUtils.formatter.format(a));
     	 
      }else {
-    total.setText(DateUtils.formatter.format(bike.getDeposit())); // tinh tong
-    total1.setText(DateUtils.formatter.format(bike.getDeposit()));} // tinh tong
+    total.setText(DateUtils.formatter.format(bike.getDeposit())); 
+    total1.setText(DateUtils.formatter.format(bike.getDeposit()));} 
     IUser iUser = new  UserDao();
     String userName =  iUser.getNameById(Integer.toString(order.getCustId()));
     name.setText(userName);

@@ -4,6 +4,7 @@ import javafx.scene.image.Image;
 
 public abstract class BikeType {
 	protected int id;
+	protected int storeId;
 	protected String name;
 	protected String type;
 	protected String manufacture;
@@ -107,13 +108,26 @@ public abstract class BikeType {
 	public void setCost(int cost) {
 		this.cost = cost;
 	}
-    
+	public int getStoreId() {
+		return storeId;
+	}
+
+	public void setStoreId(int storeId) {
+		this.storeId = storeId;
+	}
 	public int getDeposit() {
 		return 0;
 	}
+	
 	public double calTotalCost(int time) {
-	   IMoneyCharge charge = new GeneralCharge();
-	   return charge.calTotalCost(time);
+		 double total=0;
+		    if (time>=0 && time <=30) {
+		       total = 10000;
+		    } else if(time>30){
+		      double part =  Math.ceil((time - 30)/15.0);
+	             
+		      total =  (10000 + part * 3000);
+		   }
+		   return total;
 	}
-
 }

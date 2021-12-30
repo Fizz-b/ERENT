@@ -23,10 +23,10 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import se.project.controller.home.MainController;
 import se.project.controller.pay.PayController;
-import se.project.dao.BikeDao;
-import se.project.dao.StoreDao;
-import se.project.interfaces.IBike;
-import se.project.interfaces.IStore;
+import se.project.database.api.bike.BikeDao;
+import se.project.database.api.bike.IBike;
+import se.project.database.api.store.IStore;
+import se.project.database.api.store.StoreDao;
 import se.project.model.bike.BikeType;
 import se.project.model.order.Order;
 import se.project.model.user.Customer;
@@ -34,7 +34,7 @@ import se.project.util.DateUtils;
 
 public class OrderController implements Initializable {
 
-	IStore iStore;
+
 	@FXML
 	private Button returnBtn;
 	@FXML
@@ -54,7 +54,6 @@ public class OrderController implements Initializable {
 	private Label totalTime;
 	@FXML
 	private Label total;
-	private BikeType bike;
 	private Order order;
 
 	public void setOrder(Order o) {
@@ -64,39 +63,7 @@ public class OrderController implements Initializable {
 	@FXML
 	private ChoiceBox<String> choice = new ChoiceBox<String>();
 
-	public void setTime(String t) {
-		time.setText(t);
-	}
 
-	public void setDeposit(String t) {
-		deposit.setText(t);
-	}
-
-	public void setTotal(String t) {
-
-		total.setText(t);
-	}
-
-	public void setBikeName(String name) {
-		bikeName.setText(name);
-	}
-
-	public void setImage(Image m) {
-		bikeImg.setImage(m);
-	}
-
-	public BikeType getBike() {
-		return bike;
-	}
-
-	public void setBike(BikeType bike) {
-		this.bike = bike;
-	}
-
-	public void setTotalTime(String totalT) {
-		// TODO Auto-generated method stub
-		totalTime.setText(totalT);
-	}
 
 	@FXML
 	void returnBike(MouseEvent event) {
@@ -111,9 +78,9 @@ public class OrderController implements Initializable {
 			Parent root = loader.load();
 			PayController pay = loader.getController();
 		
-			iStore = new StoreDao();
+			IStore iStore = new StoreDao();
 
-			order.setReturnId(iStore.getStoreId(storeReturn)); // can bao neu chua chon store return
+			order.setReturnId(iStore.getStoreId(storeReturn)); 
 			LocalDateTime dateTime = LocalDateTime.now();
 			order.getTotalTime(dateTime); // tinh tong thoi gian thanh toan
 			order.setTimeFinish(dateTime.format(DateUtils.format)); // set String right format // time finish
@@ -159,18 +126,17 @@ public class OrderController implements Initializable {
 		s.format(DateUtils.format);
 		
 		orderCode.setText(Integer.toString(order.getId()));
-		setTotalTime(order.getTotalTime(s));
-		setTime(order.getTimeCreate());
-		setDeposit(DateUtils.formatter.format(bike.getDeposit()));
-		setTotal(DateUtils.formatter.format(order.getTotal()));
-		setBikeName(bike.getName());
-		setImage(bike.getI()); // getImage
+		totalTime.setText(order.getTotalTime(s));
+		time.setText(order.getTimeCreate());
+		deposit.setText(DateUtils.formatter.format(bike.getDeposit()));
+		total.setText(DateUtils.formatter.format(order.getTotal()));
+		bikeName.setText(bike.getName());
+		bikeImg.setImage(bike.getI()); // getImage
 	}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		// TODO Auto-generated method stub
-		iStore = new StoreDao();
+		IStore iStore = new StoreDao();
 		// chi tra ve store co the nhan xe
 		for (String s : iStore.getStoreAvai()) {
 			choice.getItems().add(s);
@@ -182,8 +148,8 @@ public class OrderController implements Initializable {
     void refresh(MouseEvent event) {
     	LocalDateTime s = LocalDateTime.now();
 		s.format(DateUtils.format);
-		setTotalTime(order.getTotalTime(s));
-		setTotal(DateUtils.formatter.format(order.getTotal()));
+		totalTime.setText(order.getTotalTime(s));
+		total.setText(DateUtils.formatter.format(order.getTotal()));
     }
 
 }

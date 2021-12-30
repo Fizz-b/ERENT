@@ -20,10 +20,10 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import se.project.controller.Control;
 import se.project.controller.home.HomeController;
-import se.project.dao.BikeDao;
-import se.project.dao.StoreDao;
-import se.project.interfaces.IBike;
-import se.project.interfaces.IStore;
+import se.project.database.api.bike.BikeDao;
+import se.project.database.api.bike.IBike;
+import se.project.database.api.store.IStore;
+import se.project.database.api.store.StoreDao;
 import se.project.model.bike.BikeType;
 import se.project.model.order.Order;
 import se.project.model.store.Store;
@@ -49,10 +49,9 @@ public class CategoryController {
     public void setStoreName(String name) {
     	storeText.setText(name);
     }
+    
 	public void initBike(ObservableList<BikeType> bikeList) {
-
 		for (BikeType s : bikeList) {
-
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getResource("/se/project/gui/category/bikeCat.fxml"));
 			try {
@@ -62,9 +61,7 @@ public class CategoryController {
 				Pane view = loader.load();
 				BikeCatController storeP = loader.getController();
 				storeP.setCustId(custId);
-				storeP.setStatus(s.getStatus());
-				storeP.getBikeImg().setImage(image);
-				storeP.setBikeText(s.getName());
+				storeP.initBikePane(s.getStatus(), s.getName(), image);
 				itemFlow.getChildren().add(view);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

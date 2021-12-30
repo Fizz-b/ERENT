@@ -17,9 +17,7 @@ import javafx.stage.Stage;
 
 public class SplashController implements Initializable {
 
-	/**
-	 * Initializes the controller class.
-	 */
+
 	@FXML
 	private Pane pane;
 

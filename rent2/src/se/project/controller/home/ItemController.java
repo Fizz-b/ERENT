@@ -18,12 +18,14 @@ import javafx.stage.Stage;
 import javax.swing.JOptionPane;
 
 import se.project.controller.pay.PayController;
-import se.project.dao.BikeDao;
-import se.project.dao.TransactionDAO;
-import se.project.dao.UserDao;
-import se.project.interfaces.IBike;
-import se.project.interfaces.ITransaction;
-import se.project.interfaces.IUser;
+import se.project.database.api.bike.BikeDao;
+import se.project.database.api.bike.IBike;
+import se.project.database.api.transaction.ITransaction;
+import se.project.database.api.transaction.IValidTransact;
+import se.project.database.api.transaction.TransactionDAO;
+import se.project.database.api.transaction.ValidTransact;
+import se.project.database.api.user.IUser;
+import se.project.database.api.user.UserDao;
 import se.project.model.bike.BikeType;
 import se.project.model.order.Order;
 import se.project.model.user.Customer;
@@ -63,8 +65,6 @@ public class ItemController {
 	private Label weight;
 
 
-	private PayController pay;
-	private BikeType bike;
 	//private BikeType bikeRent;
 	private int custId;
 	public void setId(int i) {
@@ -73,16 +73,12 @@ public class ItemController {
 
      
 
-	// set BikeType
-	public void setBik(BikeType bike2) {
-		// TODO Auto-generated method stub
-		this.bike = bike2;
-	}
-    private ITransaction iTransact = new TransactionDAO();
+
 	@FXML
 	public void rentItem(MouseEvent event) {
         IBike iBike = new BikeDao();
-		if (iTransact.checkTransactFinish(custId)) {
+        IValidTransact iCheck = new ValidTransact();
+		if (iCheck.checkTransactFinish(custId)) {
 			// check bike rent or not befrore add
 			if (iBike.checkBikeRent(name.getText())) {
 				JOptionPane.showMessageDialog(null, "On rent");
@@ -97,7 +93,7 @@ public class ItemController {
 					
 					// access the controller and call a method
 					// access the controller and call a method
-					pay = loader.getController();
+					PayController pay = loader.getController();
 					Order order = new Order();
 					
 					IBike ibike = new BikeDao();
@@ -105,7 +101,6 @@ public class ItemController {
 					order.setBikeId(bikeId);
 					order.setCustId(custId);
 			        pay.setOrder(order);
-					//pay.initData(bike, order);
 	                pay.initData(order);
 					Stage stage = (Stage) (Stage) rent.getScene().getWindow();
 					stage.setScene(new Scene(root));
