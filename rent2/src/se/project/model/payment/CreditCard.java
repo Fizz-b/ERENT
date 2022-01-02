@@ -43,25 +43,7 @@ public class CreditCard {
 		this.money = money;
 	}
 
-	/*
-	 * @date : date user enter
-	 * 
-	 * return check valid date
-	 */
-
-	// check expire
-	public boolean validateDate(LocalDate date) {
-
-		LocalDate today = LocalDate.now();
-		// check right format
-
-		// check before today expired card
-		if (date.isBefore(today)) {
-			return true;
-		}
-
-		return false;
-	}
+	
 
 	/*
 	 * @format : date format (exp: yyyy-MM-dd)

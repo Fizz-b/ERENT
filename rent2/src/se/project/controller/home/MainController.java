@@ -99,7 +99,6 @@ public class MainController {
 			try {
 				Parent root = loader.load();
 				OrderController or = loader.getController();
-
 				IOrder iOrder = new OrderDao();
 				Order order = iOrder.getOrder(custId);
 				order.setCustId(custId);
@@ -123,9 +122,19 @@ public class MainController {
 	}
 	
 	@FXML
-	void signOut(MouseEvent event) {
-		Util util = new Util();
-		util.change("/se/project/gui/login/login.fxml", btnSignOut);
+	void signOut(MouseEvent event) {	
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("/se/project/gui/login/login.fxml"));
+		try {
+			Parent root = loader.load();
+			Stage stage = (Stage) (Stage) btnSignOut.getScene().getWindow();
+			stage.setScene(new Scene(root));
+			stage.show();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
+	
 
 }

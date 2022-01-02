@@ -24,20 +24,21 @@ public class StoreDao implements IStore {
 			Connection con = Context.getConnection();
 			// can liet ke so xe dang thue
 			PreparedStatement ps = con
-					.prepareStatement("SELECT s.name,s.address,s.emptyDock,coalesce(d.rent,0),s.status,s.storeid "
-							+ "FROM store s LEFT JOIN (SELECT storeid,count(*) as rent  FROM biketype "
-							+ "WHERE status = 'Rent' GROUP BY storeid ) as d ON s.storeid = d.storeid");
+					.prepareStatement("select s.name,s.address,SUM(CASE WHEN b.type = 'Bike' THEN 1 ELSE 0 END) AS Bike, SUM(CASE WHEN b.type = 'ElectricBike' THEN 1 ELSE 0 END) AS ElectricBike,SUM(CASE WHEN b.type = 'TwinBike' THEN 1 ELSE 0 END) AS TwinBike" 
+							+",s.emptyDock,s.storeid from biketype b inner join store s on b.storeid = s.storeid  group by b.storeid");
 
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				Store store = new Store();
-				// System.out.print(rs.getString(1));
+			
 				store.setName(rs.getString(1));
 				store.setAddress(rs.getString(2));
-				store.setAvailable(Integer.valueOf(rs.getString(3)));
-				store.setRent(Integer.valueOf(rs.getString(4)));
-				store.setStatus(rs.getString(5));
-				store.setId(Integer.valueOf(rs.getString(6)));
+				store.setBike(Integer.valueOf(rs.getString(3)));
+				store.setElectricBike(Integer.valueOf(rs.getString(4)));
+				store.setTwinBike(Integer.valueOf(rs.getString(5)));
+				store.setAvailable(Integer.valueOf(rs.getString(6)));
+			  
+				store.setId(Integer.valueOf(rs.getString(7)));
 				File file = new File("src/se/project/image/" + store.getId() + ".jpeg");
 				Image image = new Image(file.toURI().toString());
 				store.setImage(image);
@@ -52,6 +53,7 @@ public class StoreDao implements IStore {
 		return storeList;
 	}
 
+	/*
 	public ObservableList<Store> getStoreByName(String name) {
 		// TODO Auto-generated method stub
 
@@ -89,7 +91,7 @@ public class StoreDao implements IStore {
 
 		return storeList;
 	}
-
+*/
 	/* get all store available to return bike */
 	@Override
 	public ObservableList<String> getStoreAvai() {
@@ -101,7 +103,7 @@ public class StoreDao implements IStore {
 
 			Connection con = Context.getConnection();
 			// can liet ke so xe dang thue
-			PreparedStatement ps = con.prepareStatement("SELECT name FROM store where status = 'Available'");
+			PreparedStatement ps = con.prepareStatement("SELECT name FROM store where emptyDock != 0");
 
 			ResultSet rs = ps.executeQuery();
 

@@ -28,34 +28,32 @@ public class BikeCatController {
 
 	private int custId;
 
-    @FXML
-    private Text status;
-
+	@FXML
+	private Text status;
 
 	public void setCustId(int custId) {
 		this.custId = custId;
 	}
 
-public void initBikePane(String sta,String bikeName,Image image) {
-	status.setText(sta);	
-	bikeText.setText(bikeName);
-	bikeImg.setImage(image);
+	public void initBikePane(String sta, String bikeName, Image image) {
+		status.setText(sta);
+		bikeText.setText(bikeName);
+		bikeImg.setImage(image);
 	}
+
 	@FXML
 	void loadDetail(MouseEvent event) {
 		IBike iBike = new BikeDao();
-		BikeType bike = iBike.getBikeFromDB(bikeText.getText());  // get selected
-		
+		BikeType bike = iBike.getBikeFromDB(bikeText.getText()); // get selected
+
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(getClass().getResource("/se/project/gui/home/itemDetail.fxml"));
 		try {
 
 			Parent root = loader.load();
 			ItemController controller = loader.getController();
-			//controller.setBik(bike); 
 			controller.setId(custId);
-            controller.initItem(bike);
-			// load
+			controller.initItem(bike);
 			Stage stage = (Stage) (Stage) ((Node) event.getSource()).getScene().getWindow();
 			stage.setScene(new Scene(root));
 			stage.show();
@@ -65,7 +63,5 @@ public void initBikePane(String sta,String bikeName,Image image) {
 		}
 
 	}
-	
-	
-	
+
 }

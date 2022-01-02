@@ -34,21 +34,19 @@ import se.project.model.store.Store;
 
 public class HomeController implements Initializable {
 	private int custId;
-
-	public void setId(int i) {
-		this.custId = i;
-	}
-    
 	@FXML
 	private TableColumn<Store, String> storeNameCol;
 	@FXML
 	private TableColumn<Store, String> storeAddressCol;
+	
+	@FXML
+	private TableColumn<Store, Integer> bikeCol;
+	@FXML
+	private TableColumn<Store, Integer> eBikeCol;
+	@FXML
+	private TableColumn<Store, Integer> twinBikeCol;
 	@FXML
 	private TableColumn<Store, Integer> storeAvaiCol;
-	@FXML
-	private TableColumn<Store, Integer> storeRentCol;
-	@FXML
-	private TableColumn<Store, String> storeStatusCol;
 	@FXML
 	private TableView<Store> storeTable;
 
@@ -60,13 +58,17 @@ public class HomeController implements Initializable {
 	private Pane searchPane;
 	
 
+	public void setId(int i) {
+		this.custId = i;
+	}
 
-	private IBike iBike = new BikeDao();
-	private IStore iStore;
+
+	
 
 	// click to a store load bike of that store
 	@FXML
 	void chooseRow(MouseEvent event) {
+		IBike iBike = new BikeDao();
 		ObservableList<BikeType> bikeList = iBike
 				.getListFromDB(storeTable.getSelectionModel().getSelectedItem().getName());
 
@@ -112,10 +114,11 @@ public class HomeController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		storeNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
 		storeAddressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
+		bikeCol.setCellValueFactory(new PropertyValueFactory<>("bike"));
+		eBikeCol.setCellValueFactory(new PropertyValueFactory<>("electricBike"));
+		twinBikeCol.setCellValueFactory(new PropertyValueFactory<>("twinBike"));
 		storeAvaiCol.setCellValueFactory(new PropertyValueFactory<>("available")); // empty dock
-		storeRentCol.setCellValueFactory(new PropertyValueFactory<>("rent"));
-		storeStatusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
-		iStore = new StoreDao();
+		IStore iStore = new StoreDao();
 
 		pnlOverview1.toFront();
 	

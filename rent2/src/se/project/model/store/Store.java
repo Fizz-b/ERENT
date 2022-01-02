@@ -7,38 +7,25 @@ public class Store {
 	private String name;
 	private String address;
 	private int available;
-	private int rent;
 	private int id;
-	private String status;
 	private Image store;
-     
-	public void setImage(Image store) {
-		this.store = store;
+	private int bike;
+	private int electricBike;
+	private int twinBike;
+	public int getElectricBike() {
+		return electricBike;
+	}
+
+	public void setElectricBike(int electricBike) {
+		this.electricBike = electricBike;
 	}
 
 	public Image getImage() {
 		return store;
 	}
 
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public void setId(Integer valueOf) {
-		// TODO Auto-generated method stub
-		this.id = valueOf;
+	public void setImage(Image store) {
+		this.store = store;
 	}
 
 	public String getName() {
@@ -65,13 +52,32 @@ public class Store {
 		this.available = available;
 	}
 
-	public int getRent() {
-		return rent;
+	public int getId() {
+		return id;
 	}
 
-	public void setRent(int rent) {
-		this.rent = rent;
+	public void setId(int id) {
+		this.id = id;
 	}
+
+	public int getBike() {
+		return bike;
+	}
+
+	public void setBike(int bike) {
+		this.bike = bike;
+	}
+
+	public int getTwinBike() {
+		return twinBike;
+	}
+
+	public void setTwinBike(int twinBike) {
+		this.twinBike = twinBike;
+	}
+
+	
+
 
 
 

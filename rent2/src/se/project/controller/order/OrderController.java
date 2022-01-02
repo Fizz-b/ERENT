@@ -55,13 +55,14 @@ public class OrderController implements Initializable {
 	@FXML
 	private Label total;
 	private Order order;
-
+	@FXML
+	private ChoiceBox<String> choice = new ChoiceBox<String>();
+	
 	public void setOrder(Order o) {
 		this.order = o;
 	}
 
-	@FXML
-	private ChoiceBox<String> choice = new ChoiceBox<String>();
+
 
 
 

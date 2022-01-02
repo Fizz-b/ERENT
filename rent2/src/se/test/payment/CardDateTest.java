@@ -1,4 +1,4 @@
-package se.test;
+package se.test.payment;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -15,8 +15,6 @@ public class CardDateTest {
     @BeforeEach                                         
     void setUp() {
         card = new CreditCard();
-        //LocalDate date = LocalDate.of(2020, Month.JANUARY, 8);
-        //card = new CreditCard("tu",date,"hello");
     }
     
     // Equivalence Partitioning

@@ -32,139 +32,128 @@ import se.project.util.DateUtils;
 
 public class PayController {
 
-  @FXML
-  private ImageView img;
-  @FXML
-  private Button rent;
+	@FXML
+	private ImageView img;
+	@FXML
+	private Button rent;
 
-  @FXML
-  private Pane payPane;
+	@FXML
+	private Pane payPane;
 
-  @FXML
-  private Label remove;
-  
-  @FXML
-  private Label excessCash;
-  
-  
+	@FXML
+	private Label remove;
 
-  @FXML
-  private Label total;
+	@FXML
+	private Label excessCash;
 
-  @FXML
-  private Label deposit;
+	@FXML
+	private Label total;
 
-  @FXML
-  private Text bikeName;
+	@FXML
+	private Label deposit;
 
-  @FXML
-  private Label time;
+	@FXML
+	private Text bikeName;
 
-  @FXML
-  private Label rentFee;
+	@FXML
+	private Label time;
 
-  @FXML
-  private Label cost;
-  @FXML
-  private CheckBox cash;
+	@FXML
+	private Label rentFee;
 
-  @FXML
-  private CheckBox credit;
+	@FXML
+	private Label cost;
+	@FXML
+	private CheckBox cash;
 
-  @FXML
-  private Label name;
+	@FXML
+	private CheckBox credit;
 
-  @FXML
-  private Label total1;
+	@FXML
+	private Label name;
 
- 
-  private Order order;
-  
-  
-  
+	@FXML
+	private Label total1;
+	private Order order;
 
+	public void setOrder(Order order2) {
+		this.order = order2;
 
-  public void setOrder(Order order2) {
-    this.order = order2;
+	}
 
-  }
+	@FXML
+	public void back(MouseEvent event) {
+		// back to shop
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("/se/project/gui/home/search.fxml"));
+		try {
+			Parent root = loader.load();
+			HomeController shop = loader.getController();
+			shop.setId(order.getCustId());
 
- 
+			Stage stage = (Stage) (Stage) ((Node) event.getSource()).getScene().getWindow();
+			stage.setScene(new Scene(root));
+			stage.show();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
-  @FXML
-  public void back(MouseEvent event) {
-    // back to shop
-    FXMLLoader loader = new FXMLLoader();
-    loader.setLocation(getClass().getResource("/se/project/gui/home/search.fxml"));
-    try {
-      Parent root = loader.load();
-      HomeController  shop = loader.getController();
-      shop.setId(order.getCustId());
-      
-      Stage stage = (Stage) (Stage) ((Node) event.getSource()).getScene().getWindow();
-      stage.setScene(new Scene(root));
-      stage.show();
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-  }
+	@FXML
+	public void rentItem(MouseEvent event) {
+		// check select pay method
+		if (credit.isSelected() || cash.isSelected()) {
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(getClass().getResource("/se/project/gui/pay/payment.fxml"));
 
-  @FXML
-  public void rentItem(MouseEvent event) {
-    // check select pay method
-    if (credit.isSelected() || cash.isSelected()) {
-      FXMLLoader loader = new FXMLLoader();
-      loader.setLocation(getClass().getResource("/se/project/gui/pay/payment.fxml"));
+			try {
+				Parent root = loader.load();
 
-      try {
-        Parent root = loader.load();
-        
-        BankGateController controller = loader.getController();
-        controller.setOrder(order);
-        // load
-        Stage stage = (Stage) rent.getScene().getWindow();
-        stage.setScene(new Scene(root));
-        stage.show();
-      } catch (IOException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-    } else {
-      JOptionPane.showMessageDialog(null, "Pick payment method first");
-    }
-  }
+				BankGateController controller = loader.getController();
+				controller.setOrder(order);
+				// load
+				Stage stage = (Stage) rent.getScene().getWindow();
+				stage.setScene(new Scene(root));
+				stage.show();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			JOptionPane.showMessageDialog(null, "Pick payment method first");
+		}
+	}
 
-  public void initData(Order order) {
-	  IBike iBike = new BikeDao();
-	  BikeType bike = iBike.getBikeById(Integer.toString(order.getBikeId()));
-    // init data
-    //setBikeData(bike);
-    bikeName.setText(bike.getName());
-    deposit.setText(DateUtils.formatter.format(bike.getDeposit()));
-    rentFee.setText(DateUtils.formatter.format(order.getTotal()));
-     if(order.getId()!=0) {
-    	 // not work
-    	 excessCash.setText(DateUtils.formatter.format(bike.getDeposit()));
-    	
-			// LocalDateTime dateTime = LocalDateTime.parse(timeCreate, format);
-		 
-    	 time.setText(DateUtils.date(order.getTime()));
-    	 double a = order.getTotal();
-    	 total.setText(DateUtils.formatter.format(a)); 
-    	 total1.setText(DateUtils.formatter.format(a));
-    	 
-     }else {
-    total.setText(DateUtils.formatter.format(bike.getDeposit())); 
-    total1.setText(DateUtils.formatter.format(bike.getDeposit()));} 
-    IUser iUser = new  UserDao();
-    String userName =  iUser.getNameById(Integer.toString(order.getCustId()));
-    name.setText(userName);
-    cost.setText(Integer.toString(bike.getCost()));
-    img.setImage(bike.getI());
-    // load pane
-    payPane.toFront();
+	public void initData(Order order) {
+		IBike iBike = new BikeDao();
+		IUser iUser = new UserDao();
+		
+		BikeType bike = iBike.getBikeById(Integer.toString(order.getBikeId()));
+		String userName = iUser.getNameById(Integer.toString(order.getCustId()));
 
-  }
+		bikeName.setText(bike.getName());
+		deposit.setText(DateUtils.formatter.format(bike.getDeposit()));
+		rentFee.setText(DateUtils.formatter.format(order.getTotal()));
+		name.setText(userName);
+		cost.setText(Integer.toString(bike.getCost()));
+		img.setImage(bike.getI());
+		
+		if (order.getId() != 0) {
+		
+			excessCash.setText(DateUtils.formatter.format(bike.getDeposit()));
+			time.setText(DateUtils.date(order.getTime()));
+			double a = order.getTotal();
+			total.setText(DateUtils.formatter.format(a));
+			total1.setText(DateUtils.formatter.format(a));
+
+		} else {
+			total.setText(DateUtils.formatter.format(bike.getDeposit()));
+			total1.setText(DateUtils.formatter.format(bike.getDeposit()));
+		}
+		
+		// load pane
+		payPane.toFront();
+
+	}
 
 }
