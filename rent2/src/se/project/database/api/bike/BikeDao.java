@@ -49,6 +49,7 @@ public class BikeDao implements IBike {
 	}
 
 	/* get bike by name */
+	
 	@Override
 	public BikeType getBikeFromDB(String bikeName) {
 

@@ -1,4 +1,4 @@
-package se.test;
+package se.test.payment;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -22,8 +22,7 @@ public class CardAmountTest {
 	void setUp() {
 		card = new CreditCard();
 		card.setMoney(100000);
-		 payService = new PayService(new PayByCard(card));
-		
+		payService = new PayService(new PayByCard(card));
 	}
 
 	// Equivalence Partitioning

@@ -58,16 +58,9 @@ public class BankGateController implements Initializable {
 	private DatePicker date;
 	@FXML
 	private TextField name;
-	private IOrder iOrder = new OrderDao();
-	private ITransaction iTransaction = new TransactionDAO();
-	private IStore iStore = new StoreDao();
 	private Order order; // need to pass order from
-	String formatDateTime;
-	CreditCard card = new CreditCard();  // k khoi tao the moi
-	private IMessageService service;
-
+	private String formatDateTime;
     private	BikeType bike;
-    private Customer customer;
 	public void setOrder(Order order2) {
 		this.order = order2;
 
@@ -83,8 +76,6 @@ public class BankGateController implements Initializable {
 			
 			PayController controller= loader.getController();
 			controller.setOrder(order);
-			  IBike iBike = new BikeDao();
-			  bike = iBike.getBikeById(Integer.toString(order.getBikeId()));
 			controller.initData(order);
 	
 			Stage stage = (Stage) (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -104,13 +95,14 @@ public class BankGateController implements Initializable {
 		// check length = 16 contain only digit
 		if(validateCard()) {
 			 IBike iBike = new BikeDao();
+			 
+			
+			 
 			 bike = iBike.getBikeById(Integer.toString(order.getBikeId()));
 			 
-			 IUser iUser = new UserDao();
-			 customer = iUser.getUserById(Integer.toString(order.getCustId()));
 			// get input
                
-			card = new CreditCard(bank.getText(), cardNum.getText().replaceAll("\\s", ""), date.getValue(),name.getText());
+			CreditCard card = new CreditCard(bank.getText(), cardNum.getText().replaceAll("\\s", ""), date.getValue(),name.getText());
 			PayService payService = new PayService(new PayByCard(card));// can luu the vao bang transaction
 			formatDateTime = LocalDateTime.now().format(DateUtils.format);
                  
@@ -176,10 +168,11 @@ public class BankGateController implements Initializable {
 			@Override
 			public void run() {
 				ITransaction iTransact = new TransactionDAO();
+		        IOrder iOrder = new OrderDao();
 				iTransact.saveTransacToDB(order);
 				int orderId = iOrder.getOrderId(order.getCustId());
 				order.setId(orderId);
-				iTransaction.saveTransaction(orderId, messageA.getText(),bike.getDeposit(),
+				iTransact.saveTransaction(orderId, messageA.getText(),bike.getDeposit(),
 						cardNum.getText().replaceAll("\\s", ""));
 			}
 
@@ -192,6 +185,8 @@ public class BankGateController implements Initializable {
 		Thread t2 = new Thread(new Runnable() {
 			@Override
 			public void run() {
+			    ITransaction iTransaction = new TransactionDAO();
+			    IStore iStore = new StoreDao();
 				iTransaction.saveTransaction(order.getId(), messageA.getText(), order.getTotal(),
 						cardNum.getText().replaceAll("\\s", ""));
 
@@ -209,12 +204,12 @@ public class BankGateController implements Initializable {
 	
 	public void threadEmail(double money) {
 		Thread t1 = new Thread(new Runnable() {
-
 			@Override
 			public void run() { // need to implement overall
-				service = new EmailService();
-				service.sendEmail(customer.getEmail(),bike.getName(), order.getTimeCreate(),
-						money);
+				IMessageService service = new EmailService();
+				IUser iUser = new UserDao();
+				Customer customer = iUser.getUserById(Integer.toString(order.getCustId()));
+				service.sendEmail(customer.getEmail(),bike.getName(), order.getTimeCreate(),money);
 				
 			}
 
@@ -225,7 +220,7 @@ public class BankGateController implements Initializable {
    public boolean validateCard() {
 	   IValidTransact iCheck = new ValidTransact();
 	   if (name.getText() == "" || cardNum.getText() == "" || bank.getText() == ""
-				|| card.validateDate(date.getValue()) 
+				|| DateUtils.validateDate(date.getValue()) 
 				|| cardNum.getText().replaceAll("\\s", "").length() != 16
 				|| !cardNum.getText().replaceAll("\\s", "").matches("[0-9]+")) {
 			JOptionPane.showMessageDialog(null, "Enter full infomation and card number is 16 digit !");

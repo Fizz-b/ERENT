@@ -40,9 +40,7 @@ public class ResultController {
 		try {
 			Parent root = loader.load();
 			MainController shop = loader.getController();
-
-			// can reset order ve null neu thanh toan xog
-
+   
 			shop.setId(custId);
 			shop.initButton();
 			Stage stage = (Stage) (Stage) ((Node) event.getSource()).getScene().getWindow();

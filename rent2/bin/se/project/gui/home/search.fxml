@@ -73,15 +73,16 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <StackPane layoutX="23.0" layoutY="235.0" prefHeight="283.0" prefWidth="794.0">
+                  <StackPane layoutX="50.0" layoutY="238.0" prefHeight="283.0" prefWidth="782.0">
                      <children>
-                        <TableView fx:id="storeTable" onMouseClicked="#chooseRow" prefHeight="284.0" prefWidth="794.0" style="-fx-border-radius: 10 10 0 0;">
+                        <TableView fx:id="storeTable" onMouseClicked="#chooseRow" prefHeight="283.0" prefWidth="770.0" style="-fx-border-radius: 10 10 0 0;">
                            <columns>
-                              <TableColumn fx:id="storeNameCol" prefWidth="130.3999900817871" style="-fx-alignment: center;" text="Name" />
-                              <TableColumn fx:id="storeAddressCol" prefWidth="237.59999084472656" style="-fx-alignment: center;" text="Address" />
-                              <TableColumn fx:id="storeAvaiCol" prefWidth="146.4000244140625" style="-fx-alignment: center;" text="Empty Dock" />
-                              <TableColumn fx:id="storeRentCol" prefWidth="133.60003662109375" style="-fx-alignment: center;" text="Rent" />
-                              <TableColumn fx:id="storeStatusCol" minWidth="0.0" prefWidth="148.0" style="-fx-alignment: center;" text="Slot Status" />
+                              <TableColumn fx:id="storeNameCol" prefWidth="119.19998168945312" style="-fx-alignment: center;" text="Name" />
+                              <TableColumn fx:id="storeAddressCol" prefWidth="256.00001525878906" style="-fx-alignment: center;" text="Address" />
+                              <TableColumn fx:id="bikeCol" prefWidth="85.5999755859375" style="-fx-alignment: center;" text="Bike" />
+                              <TableColumn fx:id="eBikeCol" prefWidth="81.60003662109375" style="-fx-alignment: center;" text="Electric Bike" />
+                              <TableColumn fx:id="twinBikeCol" prefWidth="82.4000244140625" style="-fx-alignment: center;" text="Twin Bike" />
+                              <TableColumn fx:id="storeAvaiCol" prefWidth="155.199951171875" style="-fx-alignment: center;" text="Empty Dock" />
                            </columns>
                         </TableView>
                      </children>

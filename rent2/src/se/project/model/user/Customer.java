@@ -8,7 +8,6 @@ public class Customer {
   private String name;
   private String address;
   private String email;
-  private CreditCard card;
 
   public int getId() {
     return id;

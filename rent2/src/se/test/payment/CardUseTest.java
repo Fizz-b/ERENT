@@ -1,4 +1,4 @@
-package se.test;
+package se.test.payment;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -10,10 +10,12 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import se.project.database.Context;
 import se.project.database.MySQLConnection;
-import se.project.interfaces.TransactionUtils;
+import se.project.database.api.transaction.IValidTransact;
+import se.project.database.api.transaction.ValidTransact;
+
 
 public class CardUseTest {
-
+	private IValidTransact iCheck = new ValidTransact();
 	@BeforeEach
 	void setUp() {
 		 Context.selectDataBase(new MySQLConnection());
@@ -23,7 +25,6 @@ public class CardUseTest {
 	@ValueSource(strings = { "1234567891111111", "1234567891111112" })
 	@DisplayName("Check card used")
 	void testCard(String card) {
-		assertEquals(false,TransactionUtils.checkCard(card, "1") , "Card have been used");
-		assertEquals(true,TransactionUtils.checkTransact(card, "1") , "Card have been used");
+		assertEquals(true,iCheck.checkSameCard(card, "277") , "Card have been used");
 	}
 }
