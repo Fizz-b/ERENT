@@ -91,8 +91,6 @@ public class BankGateController implements Initializable {
 	@FXML
 	public void pay() {
 		boolean isSuccess = false;
-		// can check xem the da su dung cho tk nao chua
-		// check length = 16 contain only digit
 		if(validateCard()) {
 			 IBike iBike = new BikeDao();
 			 

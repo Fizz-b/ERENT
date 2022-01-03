@@ -56,7 +56,13 @@ public class HomeController implements Initializable {
 	private TextField searchBar;
 	@FXML
 	private Pane searchPane;
-	
+	@FXML private TableColumn<BikeType, String> bikeName;
+	@FXML private TableColumn<BikeType, String> bikeType;
+	@FXML private TableColumn<BikeType, Integer> bikeManu; // manufacture
+	@FXML private TableColumn<BikeType, String> bikeProducer;
+	@FXML private TableColumn<BikeType, Integer> bikeCost;
+	@FXML private TableView<BikeType> bikeTable;
+	private IBike iBike = new BikeDao();
 
 	public void setId(int i) {
 		this.custId = i;
@@ -64,7 +70,7 @@ public class HomeController implements Initializable {
 
 
 	
-
+/*
 	// click to a store load bike of that store
 	@FXML
 	void chooseRow(MouseEvent event) {
@@ -91,7 +97,7 @@ public class HomeController implements Initializable {
 			e.printStackTrace();
 		}
 	}
-
+*/
 	@FXML
 	void back(MouseEvent event) {
 		FXMLLoader loader = new FXMLLoader();
@@ -122,7 +128,14 @@ public class HomeController implements Initializable {
 
 		pnlOverview1.toFront();
 	
-
+		bikeName.setCellValueFactory(new PropertyValueFactory<>("name")); // map with type in class BikeType
+		bikeType.setCellValueFactory(new PropertyValueFactory<>("type"));
+		bikeManu.setCellValueFactory(new PropertyValueFactory<>("manufacture"));
+		bikeProducer.setCellValueFactory(new PropertyValueFactory<>("producer"));
+		bikeCost.setCellValueFactory(new PropertyValueFactory<>("cost"));
+	
+	
+		
 		ObservableList<Store> dataList = iStore.getListFromDB();
 		// Wrap the ObservableList in a FilteredList (initially display all data).
 		FilteredList<Store> filteredData = new FilteredList<>(dataList, b -> true);
@@ -162,5 +175,68 @@ public class HomeController implements Initializable {
 		storeTable.toFront();
 
 	}
+	@FXML
+	void chooseRow() {
+		ObservableList<BikeType> dataList = iBike
+				.getListFromDB(storeTable.getSelectionModel().getSelectedItem().getName());
+		bikeTable.setItems(dataList);
 
+		// Wrap the ObservableList in a FilteredList (initially display all data).
+		FilteredList<BikeType> filteredData = new FilteredList<>(dataList, b -> true);
+
+		// 2. Set the filter Predicate whenever the filter changes.
+		searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
+			filteredData.setPredicate(biketype -> {
+				// If filter text is empty, display all persons.
+
+				if (newValue == null || newValue.isEmpty()) {
+					return true;
+				}
+
+				// Compare first name and last name of every person with filter text.
+				String lowerCaseFilter = newValue.toLowerCase();
+
+				if (biketype.getName().toLowerCase().indexOf(lowerCaseFilter) != -1) {
+					return true; // Filter matches first name.
+				}
+
+				else
+					return false; // Does not match.
+			});
+		});
+          
+		// 3. Wrap the FilteredList in a SortedList.
+		SortedList<BikeType> sortedData = new SortedList<>(filteredData);
+
+		// 4. Bind the SortedList comparator to the TableView comparator.
+		// Otherwise, sorting the TableView would have no effect.
+		sortedData.comparatorProperty().bind(bikeTable.comparatorProperty());
+
+		// 5. Add sorted (and filtered) data to the table.
+		bikeTable.setItems(sortedData);
+		bikeTable.toFront();
+	}
+
+	// click bike load detail of that bike
+	@FXML
+	void chooseBike(MouseEvent event) {
+
+		BikeType bike = iBike.getBikeFromDB(bikeTable.getSelectionModel().getSelectedItem().getName());
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("/se/project/gui/home/itemDetail.fxml"));
+		try {
+
+			Parent root = loader.load();
+			ItemController controller = loader.getController();
+			controller.setId(custId);
+			controller.initItem(bike);
+			Stage stage = (Stage) (Stage) ((Node) event.getSource()).getScene().getWindow();
+			stage.setScene(new Scene(root));
+			stage.show();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 }

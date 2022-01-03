@@ -121,7 +121,7 @@ public abstract class BikeType {
 	
 	public double calTotalCost(int time) {
 		 double total=0;
-		    if (time>=0 && time <=30) {
+		    if (time>0 && time <=30) {
 		       total = 10000;
 		    } else if(time>30){
 		      double part =  Math.ceil((time - 30)/15.0);
