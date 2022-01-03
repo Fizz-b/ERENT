@@ -16,6 +16,7 @@ import se.project.database.api.transaction.ValidTransact;
 import se.project.model.payment.CreditCard;
 import se.project.model.payment.PayByCard;
 import se.project.model.payment.PayService;
+import se.project.util.DateUtils;
 
 public class PaymentTest {
 	private CreditCard card;
@@ -32,7 +33,7 @@ public class PaymentTest {
 	@Test                                               
     @DisplayName("Test case 1:Valid card")   
     void testValidInput() {
-        assertEquals(false,card.validateDate(LocalDate.of(2024, Month.JANUARY, 8)),"ValidDate");
+        assertEquals(false,DateUtils.validateDate(LocalDate.of(2024, Month.JANUARY, 8)),"ValidDate");
         assertEquals(false,iCheck.checkCardUsed("1234567891111111", "2") , "Card have not been used"); 
         assertEquals(true, payService.pay(90000), "Enough money");
     }
@@ -47,7 +48,7 @@ public class PaymentTest {
 	@Test                                               
     @DisplayName("Test case 3:Expired card")   
     void testInvalidDate() {
-        assertEquals(true,card.validateDate(LocalDate.of(2020, Month.JANUARY, 8)),     
+        assertEquals(true,DateUtils.validateDate(LocalDate.of(2020, Month.JANUARY, 8)),     
                 "InvalidDate");  
     }
 	
